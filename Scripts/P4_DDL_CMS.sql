@@ -55,7 +55,9 @@ CREATE TABLE Resident (
     ContactNumber VARCHAR(20) NOT NULL UNIQUE,
     Email VARCHAR(255),
     EmergencyContact VARCHAR(20),
-    OccupancyType VARCHAR(50)
+    OccupancyType VARCHAR(50),
+    SSN VARCHAR(255) NOT NULL,
+    EncryptedSSN VARBINARY(MAX),
 
     CONSTRAINT Resident_PK PRIMARY KEY (ResidentID),
     CONSTRAINT Resident_ApartmentID_FK FOREIGN KEY (ApartmentID) REFERENCES Apartment(ApartmentID),
