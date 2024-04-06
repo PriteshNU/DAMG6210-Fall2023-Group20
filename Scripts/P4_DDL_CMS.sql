@@ -97,10 +97,22 @@ CREATE TABLE Payment (
     CONSTRAINT Payment_PaymentMethod_CHK CHECK (PaymentMethod IN ('CC', 'ACH', 'Cash'))
 );
 
+--------------------------------------------------------------------------------------------------------------------------------
+-- Function to generate unique invoice number
+GO
+CREATE FUNCTION GenerateInvoiceNumber (@InvoiceID INT, @IssueDate DATE)
+RETURNS VARCHAR(50)
+AS
+BEGIN
+    RETURN'INV-' + REPLACE(CONVERT(VARCHAR, @IssueDate, 112), '-', '') + '-' + RIGHT('0000' + CAST(@InvoiceID AS VARCHAR), 4);
+END;
+GO
+--------------------------------------------------------------------------------------------------------------------------------
+
 CREATE TABLE Invoice (
     InvoiceID INT IDENTITY(1,1) NOT NULL,
     ApartmentID INT NOT NULL,
-    [Number] VARCHAR(50) NOT NULL,
+    [Number] AS (dbo.GenerateInvoiceNumber(IssueDate, InvoiceID)) PERSISTED,
     IssueDate DATE NOT NULL DEFAULT GETDATE(),
     DueDate AS (DATEADD(MONTH, 1, IssueDate)),
     TotalAmount DECIMAL(10, 2) NOT NULL,
