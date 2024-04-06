@@ -61,7 +61,9 @@ CREATE TABLE Resident (
 
     CONSTRAINT Resident_PK PRIMARY KEY (ResidentID),
     CONSTRAINT Resident_ApartmentID_FK FOREIGN KEY (ApartmentID) REFERENCES Apartment(ApartmentID),
-    CONSTRAINT Resident_OccupancyType_CHK CHECK (OccupancyType IN ('Owner', 'Tenant'))
+    CONSTRAINT Resident_OccupancyType_CHK CHECK (OccupancyType IN ('Owner', 'Tenant')),
+
+    CONSTRAINT Resident_SSN_UQ UNIQUE (SSN)
 );
 
 CREATE TABLE Staff (
@@ -85,20 +87,22 @@ CREATE TABLE Payment (
     PaymentDate DATETIME,
     PaymentType VARCHAR(50),
     [Status] VARCHAR(50), 
-    Method VARCHAR(50),
+    PaymentMethod VARCHAR(50),
+    PaymentMethodLastFour VARCHAR(4),
     TransactionRefNum UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID(),
 
     CONSTRAINT Payment_PK PRIMARY KEY (PaymentID),
     CONSTRAINT Payment_ResidentID_FK FOREIGN KEY (ResidentID) REFERENCES Resident(ResidentID),
     
-    CONSTRAINT Payment_PaymentType_CHK CHECK ([Status] IN ('Maintenance', 'AmenityBooking', 'ServiceRequest')),
+    CONSTRAINT Payment_PaymentType_CHK CHECK (PaymentType IN ('Maintenance', 'AmenityBooking', 'ServiceRequest')),
     CONSTRAINT Payment_Status_CHK CHECK ([Status] IN ('Paid', 'Partial', 'Cancelled')),
-    CONSTRAINT Payment_Method_CHK CHECK (Method IN ('CC', 'ACH', 'Cash')),
+    CONSTRAINT Payment_PaymentMethod_CHK CHECK (PaymentMethod IN ('CC', 'ACH', 'Cash'))
 );
 
 CREATE TABLE Invoice (
     InvoiceID INT IDENTITY(1,1) NOT NULL,
     ApartmentID INT NOT NULL,
+    [Number] VARCHAR(50) NOT NULL,
     IssueDate DATE NOT NULL DEFAULT GETDATE(),
     DueDate AS (DATEADD(MONTH, 1, IssueDate)),
     TotalAmount DECIMAL(10, 2) NOT NULL,
@@ -107,8 +111,7 @@ CREATE TABLE Invoice (
     CONSTRAINT Invoice_PK PRIMARY KEY (InvoiceID),
     CONSTRAINT Invoice_ApartmentID_FK FOREIGN KEY (ApartmentID) REFERENCES Apartment(ApartmentID),
 
-    CONSTRAINT Invoice_Status_CHK CHECK ([Status] IN ('Issued', 'Paid', 'Overdue')),
-    -- CONSTRAINT Invoice_DueDate_CHK CHECK (DueDate > DATEADD(day, 30, IssueDate))
+    CONSTRAINT Invoice_Status_CHK CHECK ([Status] IN ('Issued', 'Paid', 'Overdue'))
 );
 
 CREATE TABLE MaintenanceFee (

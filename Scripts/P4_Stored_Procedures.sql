@@ -16,14 +16,12 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- Validate Amount
     IF @Amount <= 0
     BEGIN
         RAISERROR ('Amount must be greater than zero.', 16, 1);
         RETURN;
     END
 
-    -- Validate PaymentType
     IF @PaymentType NOT IN ('Maintenance', 'ServiceRequest', 'AmenityBooking')
     BEGIN
         RAISERROR ('Invalid PaymentType provided.', 16, 1);
@@ -37,9 +35,27 @@ BEGIN
 
     IF @PaymentType = 'Maintenance'
     BEGIN
-        SELECT @BalanceAmount = (TotalAmount - @Amount)
+        DECLARE @TotalPaid DECIMAL(10, 2);
+
+        -- Calculate the total amount paid so far for this invoice
+        SELECT @TotalPaid = ISNULL(SUM(Amount), 0)
+        FROM Payment
+        WHERE PaymentID IN (
+            SELECT PaymentID 
+            FROM MaintenanceFee 
+            WHERE InvoiceID = @EntityID
+        );
+
+        -- Calculate the new balance after the current payment
+        SELECT @BalanceAmount = TotalAmount - (@TotalPaid + @Amount)
         FROM Invoice
         WHERE InvoiceID = @EntityID;
+
+        IF @BalanceAmount < 0
+        BEGIN
+            RAISERROR('Payment exceeds the balance amount.', 16, 1);
+            RETURN;
+        END
     END
 
     -- Insert into Payment table
@@ -98,7 +114,6 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- Validate the input parameters
     IF NOT EXISTS (SELECT 1 FROM Resident WHERE ResidentID = @ResidentID)
     BEGIN
         RAISERROR('Resident not found.', 16, 1);
@@ -135,12 +150,11 @@ BEGIN
     -- who is not assigned to any service request on the ScheduledDate
     SELECT TOP 1 @StaffAssignedID = s.StaffID
     FROM Staff s
-    WHERE s.[Role] = @RoleRequired
+    WHERE s.[Role] = @RoleRequired AND s.EmploymentEndDate < GETDATE()
     AND NOT EXISTS (
         SELECT 1
         FROM ServiceRequest sr
-        WHERE sr.StaffAssignedID = s.StaffID
-        AND sr.ScheduledDate = @ScheduledDate
+        WHERE sr.StaffAssignedID = s.StaffID AND sr.ScheduledDate = @ScheduledDate
     )
     ORDER BY NEWID();
 
@@ -154,7 +168,6 @@ BEGIN
 
     SET @ServiceRequestID = SCOPE_IDENTITY();
 
-    -- Return the message with ID of the newly created service request and the assigned staff
     IF @StaffAssignedID IS NOT NULL
     BEGIN
         SET @OutputMessage = 'Service request with ID ' + CAST(@ServiceRequestID AS VARCHAR) + 

@@ -17,3 +17,19 @@ BEGIN
 END;
 GO
 --------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- Trigger to generate a unique invoice number
+GO
+CREATE TRIGGER trg_SetInvoiceNumber
+ON Invoice
+AFTER INSERT
+AS
+BEGIN
+    UPDATE Invoice
+    SET Invoice.Number = 'INV-' + REPLACE(CONVERT(VARCHAR, Invoice.IssueDate, 112), '-', '') + '-' + RIGHT('0000' + CAST(Invoice.InvoiceID AS VARCHAR), 4)
+    FROM Inserted i
+    WHERE i.InvoiceID = i.InvoiceID;
+END;
+GO
+--------------------------------------------------------------------------------------------------------------------------------
