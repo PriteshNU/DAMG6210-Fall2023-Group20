@@ -30,12 +30,21 @@ BEGIN
         RETURN;
     END
 
+
     DECLARE @PaymentID INT;
     DECLARE @PaymentDate DATETIME = GETDATE();
+    DECLARE @BalanceAmount DECIMAL(10, 2);
+
+    IF @PaymentType = 'Maintenance'
+    BEGIN
+        SELECT @BalanceAmount = (TotalAmount - @Amount)
+        FROM Invoice
+        WHERE InvoiceID = @EntityID;
+    END
 
     -- Insert into Payment table
     INSERT INTO Payment (ResidentID, Amount, PaymentDate, PaymentType, [Status], Method)
-    VALUES (@ResidentID, @Amount, @PaymentDate, @PaymentType, 'Completed', @Method);
+    VALUES (@ResidentID, @Amount, @PaymentDate, @PaymentType, CASE WHEN @BalanceAmount > 0 THEN 'Partial' ELSE 'Paid' END, @Method);
 
     SET @PaymentID = SCOPE_IDENTITY();
 
@@ -47,7 +56,15 @@ BEGIN
     IF @PaymentType = 'Maintenance'
     BEGIN
         INSERT INTO MaintenanceFee (PaymentID, InvoiceID, BalanceAmount)
-        VALUES (@PaymentID, @EntityID, @Amount);
+        VALUES (@PaymentID, @EntityID, @BalanceAmount);
+
+        -- Update the Invoice status
+        IF @BalanceAmount = 0
+        BEGIN
+            UPDATE Invoice
+            SET [Status] = 'Paid'
+            WHERE InvoiceID = @EntityID;
+        END
     END
     ELSE IF @PaymentType = 'ServiceRequest'
     BEGIN
@@ -99,7 +116,7 @@ BEGIN
         CASE @Priority
             WHEN 'High' THEN 50.00
             WHEN 'Medium' THEN 25.00
-            WHEN 'Low' THEN 50.00
+            WHEN 'Low' THEN 10.00
             ELSE NULL
         END;
     END

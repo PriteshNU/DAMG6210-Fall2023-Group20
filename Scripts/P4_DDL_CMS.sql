@@ -92,7 +92,7 @@ CREATE TABLE Payment (
     CONSTRAINT Payment_ResidentID_FK FOREIGN KEY (ResidentID) REFERENCES Resident(ResidentID),
     
     CONSTRAINT Payment_PaymentType_CHK CHECK ([Status] IN ('Maintenance', 'AmenityBooking', 'ServiceRequest')),
-    CONSTRAINT Payment_Status_CHK CHECK ([Status] IN ('Completed', 'Partial', 'Cancelled', 'Overdue')),
+    CONSTRAINT Payment_Status_CHK CHECK ([Status] IN ('Paid', 'Partial', 'Cancelled')),
     CONSTRAINT Payment_Method_CHK CHECK (Method IN ('CC', 'ACH', 'Cash')),
 );
 
@@ -102,7 +102,7 @@ CREATE TABLE Invoice (
     IssueDate DATE NOT NULL DEFAULT GETDATE(),
     DueDate AS (DATEADD(MONTH, 1, IssueDate)),
     TotalAmount DECIMAL(10, 2) NOT NULL,
-    [Status] VARCHAR(50),
+    [Status] VARCHAR(50) DEFAULT 'Issued',
 
     CONSTRAINT Invoice_PK PRIMARY KEY (InvoiceID),
     CONSTRAINT Invoice_ApartmentID_FK FOREIGN KEY (ApartmentID) REFERENCES Apartment(ApartmentID),
@@ -231,11 +231,11 @@ CREATE TABLE AmenityBooking (
     CONSTRAINT AmenityBooking_ResidentID_FK FOREIGN KEY (ResidentID) REFERENCES Resident(ResidentID)
 );
 
-CREATE TABLE AmentityBookingFee (
+CREATE TABLE AmenityBookingFee (
     PaymentID INT NOT NULL,
     AmenityBookingID INT NOT NULL,
 
-    CONSTRAINT AmentityBookingFee_PK PRIMARY KEY (PaymentID, AmenityBookingID),
+    CONSTRAINT AmenityBookingFee_PK PRIMARY KEY (PaymentID, AmenityBookingID),
     CONSTRAINT AmenityBookingFee_PaymentID_FK FOREIGN KEY (PaymentID) REFERENCES Payment(PaymentID),
     CONSTRAINT AmenityBookingFee_AmenityBookingID_FK FOREIGN KEY (AmenityBookingID) REFERENCES AmenityBooking(AmenityBookingID)
 );
