@@ -269,14 +269,11 @@ CREATE TABLE IncidentLog (
 );
 
 
--- New Table ParkingSlotAllotment is created to track the Vehicle parking Allotment
-CREATE TABLE ParkingSlotAllotment (
-	SlotAllotmentID INT NOT NULL IDENTITY(1,1),
-	VehicleID INT NOT NULL,
-	ParkingSlotID INT NOT NULL,
-	CONSTRAINT ParkingSlotAllotment_VehicleID_FK FOREIGN KEY (VehicleID) REFERENCES Vehicle(VehicleID),
-	CONSTRAINT ParkingSlotAllotment_ParkingSlotID_FK FOREIGN KEY (ParkingSlotID) REFERENCES ParkingSlot(ParkingSlotID)
-);
 
---VehicleID Column from ParkingSlot Table is removed
-ALTER TABLE ParkingSlot DROP COLUMN VehicleID;
+--VehicleID Column from ParkingSlot Table is again added
+ALTER TABLE ParkingSlot ADD VehicleID INT;
+
+--Set VehicleID as FK but as NULLABLE
+ALTER TABLE ParkingSlot
+ADD CONSTRAINT FK_PersonOrder
+FOREIGN KEY (VehicleID) REFERENCES Vehicle(VehicleID);

@@ -351,11 +351,11 @@ CREATE PROCEDURE InsertVisitorDetailsAndParkingDetailsProcedure
     @ContactNumber VARCHAR(20),
     @VisitDate DATE,
     @ResidentID INT,
-    @LicensePlate VARCHAR(255),
-    @Make VARCHAR(255),
-    @Model VARCHAR(255),
-    @VehicleType VARCHAR(255),
-	@OutputMessage VARCHAR(255) OUTPUT
+    @LicensePlate VARCHAR(255) = NULL,
+    @Make VARCHAR(255) = NULL,
+    @Model VARCHAR(255) = NULL,
+    @VehicleType VARCHAR(255) = NULL,
+    @OutputMessage VARCHAR(255) OUTPUT
 AS
 BEGIN
     DECLARE @EntryTime DATETIME;
@@ -363,15 +363,15 @@ BEGIN
     DECLARE @VisitorID INT;
     DECLARE @VehicleID INT;
     DECLARE @ParkingSlotID INT;
-	DECLARE @ApartmentVisited INT;
+    DECLARE @ApartmentVisited INT;
 
-    --If Visit date is not pass by the user then set current system date
-	IF @VisitDate IS NULL
-	BEGIN
-		SET @VisitDate = GETDATE();
-	END;
+    -- If Visit date is not passed by the user then set current system date
+    IF @VisitDate IS NULL
+    BEGIN
+        SET @VisitDate = GETDATE();
+    END;
 
-	-- Set entry time to current system time
+    -- Set entry time to current system time
     SET @EntryTime = GETDATE();
 
     -- Insert visitor details into Visitor table
@@ -381,38 +381,48 @@ BEGIN
     -- Retrieve the ID of the inserted visitor
     SET @VisitorID = SCOPE_IDENTITY();
 
-    -- Insert visitor's vehicle details into Vehicle table
-    INSERT INTO Vehicle (OwnerID, LicensePlate, Make, Model, [Type])
-    VALUES (@VisitorID, @LicensePlate, @Make, @Model, @VehicleType);
-
-    -- Retrieve the ID of the inserted vehicle
-    SET @VehicleID = SCOPE_IDENTITY();
-
-    -- Find an available parking slot that is not reserved for apartments
-    SELECT TOP 1 @ParkingSlotID = ParkingSlotID
-    FROM ParkingSlot
-    WHERE [Type] = 'Guest' AND [Status] = 'Available'
-
-    -- If a parking slot is found, park the vehicle
-    IF @ParkingSlotID IS NOT NULL
+    -- Check if vehicle details are provided
+    IF @LicensePlate IS NOT NULL AND @Make IS NOT NULL AND @Model IS NOT NULL AND @VehicleType IS NOT NULL
     BEGIN
-        -- Update parking slot status to Occupied
-        UPDATE ParkingSlot
-        SET [Status] = 'Occupied'
-        WHERE ParkingSlotID = @ParkingSlotID;
+        -- Insert visitor's vehicle details into Vehicle table
+        INSERT INTO Vehicle (OwnerID, LicensePlate, Make, Model, [Type])
+        VALUES (@VisitorID, @LicensePlate, @Make, @Model, @VehicleType);
 
-		INSERT INTO ParkingSlotAllotment (VehicleID, ParkingSlotID)
-		VALUES (@VehicleID, @ParkingSlotID)
+        -- Retrieve the ID of the inserted vehicle
+        SET @VehicleID = SCOPE_IDENTITY();
+
+        -- Find an available parking slot that is not reserved for apartments
+        SELECT TOP 1 @ParkingSlotID = ParkingSlotID
+        FROM ParkingSlot
+        WHERE [Type] = 'Guest' AND [Status] = 'Available';
+
+        -- If a parking slot is found, park the vehicle
+        IF @ParkingSlotID IS NOT NULL
+        BEGIN
+            -- Update parking slot status to Occupied
+            UPDATE ParkingSlot
+            SET [Status] = 'Occupied', VehicleID = @VehicleID
+            WHERE ParkingSlotID = @ParkingSlotID;
+        END;
     END;
 
     -- Log visitor info into VisitorLog table
     INSERT INTO VisitorLog (VisitorID, ResidentID)
     VALUES (@VisitorID, @ResidentID);
 
-	SELECT @ApartmentVisited = ApartmentID FROM Resident WHERE ResidentID = @ResidentID;
+    -- Get the ID of the apartment visited by the visitor
+    SELECT @ApartmentVisited = ApartmentID FROM Resident WHERE ResidentID = @ResidentID;
 
-	SET @OutputMessage = CONCAT('Name: ',@FirstName,' ',@LastName, ' | ', 'Vehicle parked at Slot: ',CAST(@ParkingSlotID AS VARCHAR(20)),
-	' | Apartment Visited: ',CAST(@ApartmentVisited AS VARCHAR(20)));
+    -- Set output message
+    SET @OutputMessage = CONCAT('Name: ', @FirstName, ' ', @LastName, ' | ');
+
+    -- Append vehicle information to output message if vehicle details provided
+    IF @LicensePlate IS NOT NULL AND @Make IS NOT NULL AND @Model IS NOT NULL AND @VehicleType IS NOT NULL
+    BEGIN
+        SET @OutputMessage = CONCAT(@OutputMessage, 'Vehicle parked at Slot: ', CAST(@ParkingSlotID AS VARCHAR(20)), ' | ');
+    END;
+
+    SET @OutputMessage = CONCAT(@OutputMessage, 'Apartment Visited: ', CAST(@ApartmentVisited AS VARCHAR(20)));
 END;
 GO
 --------------------------------------------------------------------------------------------------------------------------------
