@@ -267,3 +267,16 @@ CREATE TABLE IncidentLog (
 	-- CONSTRAINT fk_reportedBy FOREIGN KEY (ReportedBy) REFERENCES staff(staffID), 
     -- CONSTRAINT fk_handledBy FOREIGN KEY (HandledBy)  REFERENCES staff(staffID)
 );
+
+
+-- New Table ParkingSlotAllotment is created to track the Vehicle parking Allotment
+CREATE TABLE ParkingSlotAllotment (
+	SlotAllotmentID INT NOT NULL IDENTITY(1,1),
+	VehicleID INT NOT NULL,
+	ParkingSlotID INT NOT NULL,
+	CONSTRAINT ParkingSlotAllotment_VehicleID_FK FOREIGN KEY (VehicleID) REFERENCES Vehicle(VehicleID),
+	CONSTRAINT ParkingSlotAllotment_ParkingSlotID_FK FOREIGN KEY (ParkingSlotID) REFERENCES ParkingSlot(ParkingSlotID)
+);
+
+--VehicleID Column from ParkingSlot Table is removed
+ALTER TABLE ParkingSlot DROP COLUMN VehicleID;
