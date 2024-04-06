@@ -42,8 +42,6 @@ CREATE TABLE Apartment (
     CONSTRAINT Apartment_PK PRIMARY KEY (ApartmentID),
     CONSTRAINT Apartment_BuildingID_FK FOREIGN KEY (BuildingID) REFERENCES Building(BuildingID),
 
-    -- CONSTRAINT Apartment_Number_BuildingID_UQ UNIQUE ([Number], BuildingID),
-
     CONSTRAINT Apartment_Status_CHK CHECK ([Status] IN ('Occupied', 'Available'))
 );
 
@@ -56,14 +54,13 @@ CREATE TABLE Resident (
     Email VARCHAR(255),
     EmergencyContact VARCHAR(20),
     OccupancyType VARCHAR(50),
-    SSN VARCHAR(255) NOT NULL,
-    EncryptedSSN VARBINARY(MAX),
+    SSN VARBINARY(MAX) NOT NULL
 
     CONSTRAINT Resident_PK PRIMARY KEY (ResidentID),
     CONSTRAINT Resident_ApartmentID_FK FOREIGN KEY (ApartmentID) REFERENCES Apartment(ApartmentID),
     CONSTRAINT Resident_OccupancyType_CHK CHECK (OccupancyType IN ('Owner', 'Tenant')),
 
-    CONSTRAINT Resident_SSN_UQ UNIQUE (SSN)
+    -- CONSTRAINT Resident_SSN_UQ UNIQUE (SSN)
 );
 
 CREATE TABLE Staff (
@@ -74,6 +71,7 @@ CREATE TABLE Staff (
     [Address] VARCHAR(1000),
     ContactNumber VARCHAR(20) NOT NULL,
     Email VARCHAR(255),
+    SSN VARBINARY(MAX) NOT NULL,
     EmployeeStartDate DATE NOT NULL,
     EmploymentEndDate DATE,
 

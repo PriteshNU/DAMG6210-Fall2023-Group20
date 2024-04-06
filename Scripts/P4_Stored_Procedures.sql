@@ -1,15 +1,177 @@
 USE CMS;
 
 --------------------------------------------------------------------------------------------------------------------------------
--- Stored procedure to process payments of various payment types, 
--- including Maintenance charges, Service request fees, and Amenity booking fees. 
+-- Stored procedure to add a resident
+GO
+CREATE OR ALTER PROCEDURE AddResident
+    @ApartmentID INT,
+    @FirstName VARCHAR(255),
+    @LastName VARCHAR(255),
+    @ContactNumber VARCHAR(20),
+    @Email VARCHAR(255),
+    @EmergencyContact VARCHAR(20),
+    @OccupancyType VARCHAR(50),
+    @SSN VARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    DECLARE @EncryptedSSN VARBINARY(MAX);
+
+    OPEN SYMMETRIC KEY SSNEncryptionKey
+    DECRYPTION BY CERTIFICATE SSNEncryptionCert;
+
+    SET @EncryptedSSN = EncryptByKey(Key_GUID('SSNEncryptionKey'), @SSN);
+
+    CLOSE SYMMETRIC KEY SSNEncryptionKey;
+
+    INSERT INTO Resident (ApartmentID, FirstName, LastName, ContactNumber, Email, EmergencyContact, OccupancyType, SSN)
+    VALUES (@ApartmentID, @FirstName, @LastName, @ContactNumber, @Email, @EmergencyContact, @OccupancyType, @EncryptedSSN);
+END;
+GO
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- Stored procedure to get all apartments
+-- which can also filter apartments based on the status optionally
+GO
+CREATE OR ALTER PROCEDURE GetApartments
+    @Status VARCHAR(50) = NULL
+AS
+BEGIN
+    SELECT
+        a.ApartmentID,
+        a.[Number] AS ApartmentNumber,
+        a.NumOfBedrooms,
+        a.NumOfBathrooms,
+        a.[Status],
+        a.LeaseStartDate,
+        a.LeaseEndDate,
+        b.BuildingID,
+        b.[Name] AS BuildingName,
+        b.[Number] AS BuildingNumber
+    FROM
+        Apartment a
+        JOIN Building b ON a.BuildingID = b.BuildingID
+    WHERE
+        (@Status IS NULL OR a.[Status] = @Status)
+    ORDER BY
+        b.BuildingID, a.ApartmentID;
+END;
+GO
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- Stored procedure to retrieve a list of residents by building ID or a combination of building name and number
+-- which can also filter residents based on their occupancy status optionally
+GO
+CREATE OR ALTER PROCEDURE GetResidentsByBuilding
+    @BuildingID INT = NULL,
+    @BuildingName VARCHAR(255) = NULL,
+    @BuildingNumber VARCHAR(50) = NULL,
+    @OccupancyType VARCHAR(50) = NULL
+AS
+BEGIN
+    SELECT
+        a.ApartmentID,
+        a.[Number] AS ApartmentNumber,
+        r.ResidentID,
+        r.FirstName,
+        r.LastName,
+        r.ContactNumber,
+        r.Email,
+        r.OccupancyType
+    FROM
+        Building b
+        JOIN Apartment a ON b.BuildingID = a.BuildingID
+        JOIN Resident r ON a.ApartmentID = r.ApartmentID
+    WHERE
+        (@BuildingID IS NOT NULL AND b.BuildingID = @BuildingID)
+        OR
+        (@BuildingID IS NULL AND b.[Name] = @BuildingName AND b.[Number] = @BuildingNumber)
+        AND 
+        (@OccupancyType IS NULL OR r.OccupancyType = @OccupancyType)
+    ORDER BY
+        a.ApartmentID, r.ResidentID;
+END;
+GO
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- Stored procedure to get upcoming scheduled service requests assigned to a staff
+GO
+CREATE OR ALTER PROCEDURE GetServiceRequestsByStaff
+    @StaffID INT
+AS
+BEGIN
+    SELECT
+        sr.ServiceRequestID,
+        sr.ResidentID,
+        r.FirstName AS ResidentFirstName,
+        r.LastName AS ResidentLastName,
+        sr.Description,
+        sr.RequestType,
+        sr.RequestDate,
+        sr.ScheduledDate,
+        sr.[Status],
+        sr.[Priority],
+        sr.RequestFee
+    FROM
+        ServiceRequest sr
+        JOIN Staff s ON sr.StaffAssignedID = s.StaffID
+        JOIN Resident r ON sr.ResidentID = r.ResidentID
+    WHERE 
+        sr.StaffAssignedID = @StaffID AND sr.ScheduledDate >= CAST(GETDATE() AS DATE)
+    ORDER BY
+        CASE sr.[Priority]
+            WHEN 'High' THEN 1
+            WHEN 'Medium' THEN 2
+            WHEN 'Low' THEN 3
+            ELSE 4
+        END,
+        sr.ScheduledDate;
+END;
+GO
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- Stored procedure to get all amenity bookings made for today
+CREATE OR ALTER PROCEDURE GetAmenityBookingsForToday
+AS
+BEGIN
+    SELECT
+        ab.AmenityBookingID,
+        a.AmenityID,
+        a.[Name] AS AmenityName,
+        ab.ResidentID,
+        r.FirstName AS ResidentFirstName,
+        r.LastName AS ResidentLastName,
+        ab.StartTime,
+        ab.EndTime,
+        ab.NumOfAttendees,
+        ab.BookingFee
+    FROM
+        AmenityBooking ab
+        JOIN Amenity a ON ab.AmenityID = a.AmenityID
+        JOIN Resident r ON ab.ResidentID = r.ResidentID
+    WHERE
+        ab.BookingDate = CAST(GETDATE() AS DATE)
+    ORDER BY
+        ab.StartTime;
+END;
+GO
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- Stored procedure to process payments of various payment types such as 
+-- maintenance charges, service request fees, and mmenity booking fees
 GO
 CREATE OR ALTER PROCEDURE MakePayment
     @ResidentID INT,
     @Amount DECIMAL(10, 2),
     @PaymentType VARCHAR(50),
-    @Method VARCHAR(50),
+    @PaymentMethod VARCHAR(50),
+    @PaymentMethodLastFour VARCHAR(4),
     @EntityID INT,
     @TransactionRefNum UNIQUEIDENTIFIER OUTPUT
 AS
@@ -46,7 +208,6 @@ BEGIN
             WHERE InvoiceID = @EntityID
         );
 
-        -- Calculate the new balance after the current payment
         SELECT @BalanceAmount = TotalAmount - (@TotalPaid + @Amount)
         FROM Invoice
         WHERE InvoiceID = @EntityID;
@@ -59,8 +220,8 @@ BEGIN
     END
 
     -- Insert into Payment table
-    INSERT INTO Payment (ResidentID, Amount, PaymentDate, PaymentType, [Status], Method)
-    VALUES (@ResidentID, @Amount, @PaymentDate, @PaymentType, CASE WHEN @BalanceAmount > 0 THEN 'Partial' ELSE 'Paid' END, @Method);
+    INSERT INTO Payment (ResidentID, Amount, PaymentDate, PaymentType, [Status], PaymentMethod, PaymentMethodLastFour)
+    VALUES (@ResidentID, @Amount, @PaymentDate, @PaymentType, CASE WHEN @BalanceAmount > 0 THEN 'Partial' ELSE 'Paid' END, @PaymentMethod, @PaymentMethodLastFour);
 
     SET @PaymentID = SCOPE_IDENTITY();
 
@@ -89,7 +250,7 @@ BEGIN
     END
     ELSE IF @PaymentType = 'AmenityBooking'
     BEGIN
-        INSERT INTO AmentityBookingFee (PaymentID, AmenityBookingID)
+        INSERT INTO AmenityBookingFee (PaymentID, AmenityBookingID)
         VALUES (@PaymentID, @EntityID);
     END
 END;
