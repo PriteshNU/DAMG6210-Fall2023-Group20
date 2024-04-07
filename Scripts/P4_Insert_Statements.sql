@@ -1,5 +1,7 @@
 USE CMS;
 
+--------------------------------------------------------------------------------------------------------------------------------
+-- Insert statements for Building table
 INSERT INTO Building ([Name], [Number], [Location], ConstructionYear)
 VALUES
 ('Longwood', 'A', '1575 Tremont St', 2000),
@@ -12,8 +14,10 @@ VALUES
 ('Riverside', 'A', '1575 Tremont St', 2008),
 ('Riverside', 'B', '1575 Tremont St', 2003),
 ('MissionHill', 'A', '1575 Tremont St', 1998);
+--------------------------------------------------------------------------------------------------------------------------------
 
-
+--------------------------------------------------------------------------------------------------------------------------------
+-- Insert statements for Apartment table
 INSERT INTO Apartment (BuildingID, NumOfBedrooms, NumOfBathrooms, [Status], LeaseStartDate, LeaseEndDate)
 VALUES
 (1, 1, 1, 'Occupied', NULL, NULL),
@@ -76,11 +80,10 @@ VALUES
 (7, 1, 1, 'Available', NULL, NULL),
 (7, 3, 2, 'Occupied', NULL, NULL),
 (7, 2, 2, 'Occupied', NULL, NULL);
+--------------------------------------------------------------------------------------------------------------------------------
 
-ALTER TABLE Resident
-ALTER COLUMN SSN VARBINARY(MAX)
-
--- Inserting residents for the occupied apartments
+--------------------------------------------------------------------------------------------------------------------------------
+-- Insert statements for Resident table
 OPEN SYMMETRIC KEY SSNEncryptionKey
 DECRYPTION BY CERTIFICATE SSNEncryptionCert;
 
@@ -115,22 +118,67 @@ VALUES
 (144, 'George', 'Martinez', '1234567816', 'george.martinez144@email.com', '0987654347', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '789-01-8916'));
 
 CLOSE SYMMETRIC KEY SSNEncryptionKey;
+--------------------------------------------------------------------------------------------------------------------------------
 
-
+--------------------------------------------------------------------------------------------------------------------------------
 -- Insert statements for the Staff table
+OPEN SYMMETRIC KEY SSNEncryptionKey
+DECRYPTION BY CERTIFICATE SSNEncryptionCert;
 INSERT INTO Staff (FirstName, LastName, [Role], [Address], ContactNumber, Email, SSN, EmployeeStartDate, EmploymentEndDate)
 VALUES
-('David', 'Brown', 'Manager', '123 Park Ave', '1234567890', 'david.brown@email.com', 0x0102030405060708, '2020-01-01', NULL),
-('Emma', 'Johnson', 'Maintenance', '456 Lake St', '2345678901', 'emma.johnson@email.com', 0x1122334455667788, '2020-02-01', NULL),
-('Ethan', 'Williams', 'Security', '789 River Rd', '3456789012', 'ethan.williams@email.com', 0x2233445566778899, '2020-03-01', NULL),
-('Olivia', 'Jones', 'Front Desk', '101 Forest Ln', '4567890123', 'olivia.jones@email.com', 0x33445566778899AA, '2020-04-01', NULL),
-('Noah', 'Garcia', 'Janitor', '202 Hillside Ave', '5678901234', 'noah.garcia@email.com', 0x445566778899AABB, '2020-05-01', NULL),
-('Ava', 'Martinez', 'Concierge', '303 Ridge Rd', '6789012345', 'ava.martinez@email.com', 0x5566778899AABBCC, '2020-06-01', NULL),
-('Liam', 'Brown', 'Technician', '404 Elm St', '7890123456', 'liam.brown@email.com', 0x66778899AABBCCDD, '2020-07-01', NULL),
-('Sophia', 'Taylor', 'Administrator', '505 Maple Ave', '8901234567', 'sophia.taylor@email.com', 0x778899AABBCCDDEE, '2020-08-01', NULL),
-('Mason', 'Thomas', 'Caretaker', '606 Oak St', '9012345678', 'mason.thomas@email.com', 0x8899AABBCCDDEEFF, '2020-09-01', NULL),
-('Amelia', 'Roberts', 'Supervisor', '707 Pine St', '0123456789', 'amelia.roberts@email.com', 0x99AABBCCDDEEFF00, '2020-10-01', NULL);
+('John', 'Doe', 'ParkingCoordinator', '123 Maple Dr', '1234567890', 'john.doe@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '133-45-6789'), '2021-01-01', NULL),
+('Jane', 'Smith', 'Facilitator', '456 Oak St', '2345678901', 'jane.smith@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '134-45-6789'), '2021-02-01', NULL),
+('Alice', 'Brown', 'Electrician', '789 Pine Ln', '3456789012', 'alice.brown@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '135-45-6789'), '2021-03-01', NULL),
+('Bob', 'Johnson', 'Plumber', '101 Walnut St', '4567890123', 'bob.johnson@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '136-45-6789'), '2021-04-01', NULL),
+('Carol', 'Williams', 'GeneralMaintenance', '202 Cherry Ln', '5678901234', 'carol.williams@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '137-45-6789'), '2021-05-01', NULL),
+('David', 'Jones', 'ParkingCoordinator', '303 Birch Dr', '6789012345', 'david.jones@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '138-45-6789'), '2021-06-01', NULL),
+('Eve', 'Miller', 'Facilitator', '404 Cedar St', '7890123456', 'eve.miller@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '139-45-6789'), '2021-07-01', NULL),
+('Frank', 'Wilson', 'Electrician', '505 Spruce Ave', '8901234567', 'frank.wilson@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '140-45-6789'), '2021-08-01', NULL),
+('Grace', 'Moore', 'Plumber', '606 Redwood Rd', '9012345678', 'grace.moore@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '141-45-6789'), '2021-09-01', NULL),
+('Henry', 'Taylor', 'GeneralMaintenance', '707 Aspen St', '0123456789', 'henry.taylor@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '142-45-6789'), '2021-10-01', NULL),
+('Isabella', 'Anderson', 'ParkingCoordinator', '808 Willow Dr', '1234567890', 'isabella.anderson@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '143-45-6789'), '2022-01-01', NULL),
+('Jack', 'Thomas', 'Facilitator', '909 Maple Ave', '2345678901', 'jack.thomas@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '144-45-6789'), '2022-02-01', NULL),
+('Kim', 'Lee', 'Electrician', '111 Elm St', '3456789012', 'kim.lee@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '145-45-6789'), '2022-03-01', NULL),
+('Liam', 'Scott', 'Plumber', '222 Magnolia Ln', '4567890123', 'liam.scott@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '146-45-6789'), '2022-04-01', NULL),
+('Mia', 'Young', 'GeneralMaintenance', '333 Palm Dr', '5678901234', 'mia.young@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '147-45-6789'), '2022-05-01', NULL),
+('Noah', 'Edwards', 'ParkingCoordinator', '444 Pineapple St', '6789012345', 'noah.edwards@email.com', EncryptByKey(Key_GUID('SSNEncryptionKey'), '148-45-6789'), '2022-06-01', NULL);
 
+CLOSE SYMMETRIC KEY SSNEncryptionKey;
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- Insert statements for the Invoice table
+INSERT INTO Invoice (ApartmentID, IssueDate,TotalAmount)
+VALUES
+(100, '2023-06-01', 2000.00), 
+(102, '2023-05-01', 1600.00),
+(102, '2023-06-01', 1750.00),
+(102, '2023-07-01', 1900.00),
+(104, '2023-06-01', 1650.00), 
+(105, '2023-08-01', 1550.00), 
+(105, '2023-09-01', 1650.00), 
+(107, '2023-06-01', 1750.00),
+(108, '2024-02-01', 1900.00),
+(111, '2023-07-01', 1500.00),
+(112, '2023-07-01', 1600.00),
+(114, '2023-07-01', 1650.00),
+(114, '2023-08-01', 1700.00),
+(114, '2023-09-01', 1800.00),
+(115, '2023-09-01', 1550.00),
+(120, '2023-02-01', 1600.00),
+(126, '2023-05-01', 1600.00),
+(126, '2023-06-01', 1750.00),
+(128, '2023-06-01', 1650.00),
+(130, '2023-02-01', 1600.00),
+(132, '2023-03-01', 1650.00),
+(136, '2023-05-01', 1600.00),
+(136, '2023-06-01', 1750.00),
+(142, '2023-09-01', 1650.00),
+(142, '2023-10-01', 1700.00),
+(142, '2023-11-01', 1800.00);
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
 -- Insert statements for the Payment table
 INSERT INTO Payment (ResidentID, Amount, PaymentDate, PaymentType, [Status], PaymentMethod, PaymentMethodLastFour)
 VALUES
@@ -144,20 +192,7 @@ VALUES
 (8, 70.00, '2023-03-10', 'AmenityBooking', 'Paid', 'ACH', '0123'),
 (9, 90.00, '2023-03-15', 'ServiceRequest', 'Partial', 'Cash', '4567'),
 (10, 200.00, '2023-04-05', 'Maintenance', 'Paid', 'CC', '8901');
-
--- Insert statements for the Invoice table
-INSERT INTO Invoice (ApartmentID, TotalAmount)
-VALUES
-(101, 100.00),
-(101, 50.00),
-(101, 75.00),
-(104, 125.00),
-(103, 60.00),
-(106, 80.00),
-(107, 150.00),
-(108, 70.00),
-(109, 90.00),
-(100, 200.00);
+--------------------------------------------------------------------------------------------------------------------------------
 
 -- Insert statements for the MaintenanceFee table
 INSERT INTO MaintenanceFee (PaymentID, InvoiceID, BalanceAmount)
@@ -312,19 +347,3 @@ VALUES
 ('2023-01-08 15:00:00', 'Building H', 'Theft in parking garage', 'Reviewed security footage', 'Sophia Taylor', 'Mason Thomas', 'Under Investigation'),
 ('2023-01-09 16:00:00', 'Building I', 'Flooding in basement', 'Sump pump failure', 'Mason Thomas', 'Amelia Roberts', 'In Progress'),
 ('2023-01-10 17:00:00', 'Building J', 'HVAC malfunction', 'Scheduled HVAC technician for repair', 'Amelia Roberts', 'Noah Garcia', 'In Progress');
-
-Select * from Resident
-select * from Staff
-
-INSERT INTO Staff (FirstName, LastName, [Role], [Address], ContactNumber, Email, SSN, EmployeeStartDate, EmploymentEndDate)
-VALUES
-('John11', 'Doe', 'ParkingCoordinator', '123 Main St, Anytown, USA', '1234567890', 'john.doe@example.com', 0x0123456789ABCDEF, '2020-01-01', NULL),
-('Jane21', 'Smith', 'Facilitator', '456 Elm St, Anytown, USA', '9876543210', 'jane.smith@example.com', 0xFEDCBA9876543210, '2020-02-15', NULL),
-('Michae1l1', 'Johnson', 'Electrician', '789 Oak St, Anytown, USA', '5554443333', 'michael.johnson@example.com', 0xABCDEF0123456789, '2020-03-30', NULL),
-('Emily11a1', 'Williams', 'Plumber', '321 Pine St, Anytown, USA', '2223334444', 'emily.williams@example.com', 0x456789ABCDEF0123, '2020-04-20', NULL),
-('David1a1', 'Brown', 'GeneralMaintenance', '567 Cedar St, Anytown, USA', '7778889999', 'david.brown@example.com', 0x789ABCDEF0123456, '2020-05-10', NULL),
-('Emmaa1a1', 'Garcia', 'ParkingCoordinator', '890 Maple St, Anytown, USA', '9998887777', 'emma.garcia@example.com', 0x23456789ABCDEF01, '2020-06-25', NULL),
-('Christ1opher1', 'Martinez', 'Facilitator', '234 Walnut St, Anytown, USA', '6667778888', 'christopher.martinez@example.com', 0xCDEF0123456789AB, '2020-07-12', NULL),
-('Saraah1a1', 'Rodriguez', 'Electrician', '432 Birch St, Anytown, USA', '3332221111', 'sarah.rodriguez@example.com', 0xEF0123456789ABCD, '2020-08-05', NULL),
-('Mattahew11', 'Hernandez', 'Plumber', '876 Pineapple St, Anytown, USA', '1112223333', 'matthew.hernandez@example.com', 0x6789ABCDEF012345, '2020-09-18', NULL),
-('Ava1a1', 'Lopez', 'GeneralMaintenance', '543 Orange St, Anytown, USA', '4445556666', 'ava.lopez@example.com', 0x0123456789ABCDEF, '2020-10-30', NULL);
