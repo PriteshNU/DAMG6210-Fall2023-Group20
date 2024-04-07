@@ -59,6 +59,7 @@ BEGIN
             SELECT 1 
             FROM ServiceRequest sr 
             WHERE sr.StaffAssignedID = @CurrentStaffAssignedID AND sr.ScheduledDate = @UpdatedScheduledDate AND sr.ServiceRequestID != @ServiceRequestID
+            HAVING COUNT(*) >= 5
         )
         BEGIN    
             SELECT TOP 1 @UpdatedStaffAssignedID = s.StaffID
@@ -67,7 +68,8 @@ BEGIN
             AND NOT EXISTS (
                 SELECT 1
                 FROM ServiceRequest sr
-                WHERE sr.StaffAssignedID = s.StaffID AND sr.ScheduledDate = @UpdatedScheduledDate AND sr.ServiceRequestID != @ServiceRequestID
+                WHERE sr.StaffAssignedID = s.StaffID AND sr.ScheduledDate = @ScheduledDate AND sr.ServiceRequestID != @ServiceRequestID
+                HAVING COUNT(*) >= 5
             )
             ORDER BY NEWID();
 

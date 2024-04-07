@@ -136,6 +136,8 @@ BEGIN
         sr.ScheduledDate;
 END;
 GO
+
+-- EXEC GetServiceRequestsByStaff @StaffID=5;
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -329,6 +331,7 @@ BEGIN
         SELECT 1
         FROM ServiceRequest sr
         WHERE sr.StaffAssignedID = s.StaffID AND sr.ScheduledDate = @ScheduledDate
+        HAVING COUNT(*) >= 5
     )
     ORDER BY NEWID();
 
@@ -347,9 +350,9 @@ BEGIN
 END;
 GO
 
--- DECLARE @OutputMsg VARCHAR(500);
--- EXEC SubmitServiceRequest 2, 'Test', 'Plumbing', '2024-08-05', 'High', NULL, @OutputMsg OUTPUT
--- SELECT @OutputMsg;
+DECLARE @OutputMsg VARCHAR(500);
+EXEC SubmitServiceRequest 2, 'Test', 'Plumbing', '2024-08-05', 'High', NULL, @OutputMsg OUTPUT
+SELECT @OutputMsg;
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------

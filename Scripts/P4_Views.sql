@@ -3,7 +3,7 @@ USE CMS;
 --------------------------------------------------------------------------------------------------------------------------------
 -- View to get summary of service requests
 GO
-CREATE VIEW ServiceRequestSummary 
+CREATE VIEW vw_ServiceRequestSummary 
 AS
 SELECT
     sr.ServiceRequestID,
@@ -21,6 +21,34 @@ FROM
     LEFT JOIN Resident r ON sr.ResidentID = r.ResidentID
     LEFT JOIN Staff s ON sr.StaffAssignedID = s.StaffID;
 GO
+
+CREATE VIEW vw_TotalServiceRequestsByType
+AS
+SELECT
+    sr.RequestType,
+    COUNT(*) AS RequestCount
+FROM
+    ServiceRequest sr
+GROUP BY
+    RequestType;
+GO
+
+CREATE VIEW vw_StaffByMostServiceRequestAssigned
+AS
+SELECT TOP 5
+        s.StaffID,
+        s.FirstName + ' ' + s.LastName AS StaffName,
+        COUNT(sr.ServiceRequestID) AS ServiceRequestCount
+    FROM
+        Staff s
+    JOIN
+        ServiceRequest sr ON s.StaffID = sr.StaffAssignedID
+    GROUP BY
+        s.StaffID,
+        s.FirstName,
+        s.LastName
+    ORDER BY
+        COUNT(sr.ServiceRequestID) DESC;
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -37,10 +65,9 @@ SELECT
     CONVERT(VARCHAR, ab.StartTime, 108) + ' - ' + CONVERT(VARCHAR, ab.EndTime, 108) AS BookingTime,
     ab.NumOfAttendees,
     CASE 
-        WHEN ab.BookingFee > 0 THEN CAST(ab.BookingFee AS VARCHAR) + ' $'
+        WHEN ab.BookingFee > 0 THEN '$' + CAST(ab.BookingFee AS VARCHAR)
         ELSE 'Free'
-    END AS BookingFee,
-    ab.NumOfAttendees
+    END AS BookingFee
 FROM
     AmenityBooking ab
 JOIN

@@ -9,7 +9,7 @@ CREATE TABLE Building (
     [Name] VARCHAR(255) NOT NULL,
     [Number] VARCHAR(50) NOT NULL,
     [Location] VARCHAR(255) NOT NULL,
-    ConstructionYear INT,
+    ConstructionYear INT NOT NULL,
 
     CONSTRAINT Building_PK PRIMARY KEY (BuildingID),
     CONSTRAINT Building_Number_Location_UQ UNIQUE ([Name], [Number])
@@ -36,8 +36,8 @@ CREATE TABLE Apartment (
     NumOfBedrooms INT NOT NULL,
     NumOfBathrooms INT NOT NULL,
     [Status] VARCHAR(50) NOT NULL,
-    LeaseStartDate DATE,
-    LeaseEndDate DATE,
+    LeaseStartDate DATE NULL,
+    LeaseEndDate DATE NULL,
 
     CONSTRAINT Apartment_PK PRIMARY KEY (ApartmentID),
     CONSTRAINT Apartment_BuildingID_FK FOREIGN KEY (BuildingID) REFERENCES Building(BuildingID),
@@ -51,9 +51,9 @@ CREATE TABLE Resident (
     FirstName VARCHAR(255) NOT NULL,
     LastName VARCHAR(255) NOT NULL,
     ContactNumber VARCHAR(20) NOT NULL,
-    Email VARCHAR(255),
-    EmergencyContact VARCHAR(20),
-    OccupancyType VARCHAR(50),
+    Email VARCHAR(255) NOT NULL,
+    EmergencyContact VARCHAR(20) NULL,
+    OccupancyType VARCHAR(50) NOT NULL,
     SSN VARBINARY(MAX) NOT NULL
 
     CONSTRAINT Resident_PK PRIMARY KEY (ResidentID),
@@ -68,12 +68,12 @@ CREATE TABLE Staff (
     FirstName VARCHAR(255) NOT NULL,
     LastName VARCHAR(255) NOT NULL,
     [Role] VARCHAR(255) NOT NULL,
-    [Address] VARCHAR(1000),
+    [Address] VARCHAR(1000) NULL,
     ContactNumber VARCHAR(20) NOT NULL,
-    Email VARCHAR(255),
+    Email VARCHAR(255) NOT NULL,
     SSN VARBINARY(MAX) NOT NULL,
     EmployeeStartDate DATE NOT NULL,
-    EmploymentEndDate DATE,
+    EmploymentEndDate DATE NULL,
 
 	CONSTRAINT Staff_PK PRIMARY KEY (StaffID),
     CONSTRAINT Staff_Role_CHK CHECK ([Role] IN ('ParkingCoordinator', 'Facilitator', 'Electrician', 'Plumber', 'GeneralMaintenance')),
@@ -82,12 +82,12 @@ CREATE TABLE Staff (
 CREATE TABLE Payment (
     PaymentID INT IDENTITY(1,1) NOT NULL,
     ResidentID INT NOT NULL,
-    Amount DECIMAL(10, 2),
-    PaymentDate DATETIME,
-    PaymentType VARCHAR(50),
-    [Status] VARCHAR(50), 
-    PaymentMethod VARCHAR(50),
-    PaymentMethodLastFour VARCHAR(4),
+    Amount DECIMAL(10, 2) NOT NULL,
+    PaymentDate DATETIME NOT NULL,
+    PaymentType VARCHAR(50) NOT NULL,
+    [Status] VARCHAR(50) NOT NULL, 
+    PaymentMethod VARCHAR(50) NOT NULL,
+    PaymentMethodLastFour VARCHAR(4) NULL,
     TransactionRefNum UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID(),
 
     CONSTRAINT Payment_PK PRIMARY KEY (PaymentID),
@@ -117,7 +117,7 @@ CREATE TABLE Invoice (
     IssueDate DATE NOT NULL DEFAULT GETDATE(),
     DueDate AS (DATEADD(MONTH, 1, IssueDate)),
     TotalAmount DECIMAL(10, 2) NOT NULL,
-    [Status] VARCHAR(50) DEFAULT 'Issued',
+    [Status] VARCHAR(50) NOT NULL DEFAULT 'Issued',
 
     CONSTRAINT Invoice_PK PRIMARY KEY (InvoiceID),
     CONSTRAINT Invoice_ApartmentID_FK FOREIGN KEY (ApartmentID) REFERENCES Apartment(ApartmentID),
@@ -128,7 +128,7 @@ CREATE TABLE Invoice (
 CREATE TABLE MaintenanceFee (
     PaymentID INT NOT NULL,
     InvoiceID INT NOT NULL,
-    BalanceAmount DECIMAL(10, 2),
+    BalanceAmount DECIMAL(10, 2) NULL,
 
     CONSTRAINT MaintenanceFee_PK PRIMARY KEY (PaymentID, InvoiceID),
     CONSTRAINT MaintenanceFee_PaymentID_FK FOREIGN KEY (PaymentID) REFERENCES Payment(PaymentID),
@@ -138,14 +138,14 @@ CREATE TABLE MaintenanceFee (
 CREATE TABLE ServiceRequest (
     ServiceRequestID INT IDENTITY(1,1) NOT NULL,
     ResidentID INT NOT NULL,
-    [Description] VARCHAR(2500),
+    [Description] VARCHAR(2500) NULL,
     RequestType VARCHAR(50) NOT NULL,
     RequestDate DATE NOT NULL,
     ScheduledDate DATE,
     [Status] VARCHAR(50) NOT NULL,
     [Priority] VARCHAR(50),
-    RequestFee DECIMAL(10, 2),
-    StaffAssignedID INT,
+    RequestFee DECIMAL(10, 2) NULL,
+    StaffAssignedID INT NULL,
 
     CONSTRAINT ServiceRequest_PK PRIMARY KEY (ServiceRequestID),
     CONSTRAINT ServiceRequest_ResidentID_FK FOREIGN KEY (ResidentID) REFERENCES Resident(ResidentID),
@@ -170,7 +170,7 @@ CREATE TABLE Visitor (
 	ContactNumber VARCHAR(20) NOT NULL,
 	VisitDate DATE NOT NULL,
 	EntryTime DATETIME NOT NULL,
-	ExitTime DATETIME,
+	ExitTime DATETIME NULL,
 
 	CONSTRAINT Visitor_PK PRIMARY KEY (VisitorId)
 );
@@ -178,7 +178,7 @@ CREATE TABLE Visitor (
 CREATE TABLE VisitorLog (
 	VisitorID INT NOT NULL,
 	ResidentID INT NOT NULL,
-	Purpose VARCHAR(255),
+	Purpose VARCHAR(255) NULL,
 
     CONSTRAINT VisitorLog_PK PRIMARY KEY (VisitorID, ResidentID),
     CONSTRAINT VisitorLog_VisitorID_FK FOREIGN KEY (VisitorID) REFERENCES Visitor(VisitorID),
@@ -188,10 +188,10 @@ CREATE TABLE VisitorLog (
 CREATE TABLE Vehicle (
 	VehicleID INT IDENTITY(1,1) NOT NULL,
 	OwnerID INT NOT NULL,
-	LicensePlate VARCHAR(255),
-	Make VARCHAR(255),
-	Model VARCHAR(255),
-	[Type] VARCHAR(255),
+	LicensePlate VARCHAR(255) NOT NULL,
+	Make VARCHAR(255) NULL,
+	Model VARCHAR(255) NULL,
+	[Type] VARCHAR(255) NULL,
 
 	CONSTRAINT Vehicle_PK PRIMARY KEY (VehicleID),
     CONSTRAINT Vehicle_LicensePlate_UQ UNIQUE (LicensePlate)
@@ -199,9 +199,9 @@ CREATE TABLE Vehicle (
 
 CREATE TABLE ParkingSlot (
 	ParkingSlotID INT IDENTITY(1,1) NOT NULL,
-	VehicleID INT,
-	[Type] VARCHAR(50),
-	[Status] VARCHAR(50),
+	VehicleID INT NULL,
+	[Type] VARCHAR(50) NOT NULL,
+	[Status] VARCHAR(50) NOT NULL,
 
 	CONSTRAINT ParkingSlot_PK PRIMARY KEY (ParkingSlotID),
     CONSTRAINT ParkingSlot_VehicleID_FK FOREIGN KEY (VehicleID) REFERENCES Vehicle(VehicleID),
@@ -225,7 +225,7 @@ CREATE TABLE Amenity (
     [Location] VARCHAR(255) NOT NULL,
     Capacity INT NOT NULL,
     AvailabilityHours TIME NOT NULL,
-    ReservationRequired BIT,
+    ReservationRequired BIT NOT NULL DEFAULT 0,
 
     CONSTRAINT Amentity_PK PRIMARY KEY (AmenityID)
 );
@@ -237,7 +237,7 @@ CREATE TABLE AmenityBooking (
     BookingDate DATE NOT NULL,
     StartTime TIME NOT NULL,
     EndTime TIME NOT NULL,
-    BookingFee DECIMAL(10, 2),
+    BookingFee DECIMAL(10, 2) NULL,
     NumOfAttendees INT NOT NULL,
 
 	CONSTRAINT AmenityBooking_PK PRIMARY KEY (AmenityBookingID),
@@ -258,10 +258,10 @@ CREATE TABLE IncidentLog (
     IncidentLogID INT IDENTITY(1,1) NOT NULL,
     IncidentDateTime DATETIME NOT NULL,
     IncidentLocation VARCHAR(255) NOT NULL,
-    [Description] VARCHAR(2500),
-    ActionTaken VARCHAR(2500),
-    ReportedBy VARCHAR(255),
-    HandledBy VARCHAR(255),
+    [Description] VARCHAR(2500) NULL,
+    ActionTaken VARCHAR(2500) NULL,
+    ReportedBy VARCHAR(255) NULL,
+    HandledBy VARCHAR(255) NULL,
     [Status] VARCHAR(50) NOT NULL,
 
     CONSTRAINT IncidentLog_PK PRIMARY KEY (IncidentLogID),
