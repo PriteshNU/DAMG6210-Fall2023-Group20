@@ -112,7 +112,7 @@ GO
 CREATE TABLE Invoice (
     InvoiceID INT IDENTITY(1,1) NOT NULL,
     ApartmentID INT NOT NULL,
-    [Number] AS (dbo.GenerateInvoiceNumber(IssueDate, InvoiceID)) PERSISTED,
+    [Number] AS (dbo.GenerateInvoiceNumber(InvoiceID, IssueDate)),
     IssueDate DATE NOT NULL DEFAULT GETDATE(),
     DueDate AS (DATEADD(MONTH, 1, IssueDate)),
     TotalAmount DECIMAL(10, 2) NOT NULL,
@@ -198,7 +198,7 @@ CREATE TABLE Vehicle (
 
 CREATE TABLE ParkingSlot (
 	ParkingSlotID INT IDENTITY(1,1) NOT NULL,
-	VehicleID INT NOT NULL,
+	VehicleID INT,
 	[Type] VARCHAR(50),
 	[Status] VARCHAR(50),
 
@@ -267,13 +267,3 @@ CREATE TABLE IncidentLog (
 	-- CONSTRAINT fk_reportedBy FOREIGN KEY (ReportedBy) REFERENCES staff(staffID), 
     -- CONSTRAINT fk_handledBy FOREIGN KEY (HandledBy)  REFERENCES staff(staffID)
 );
-
-
-
---VehicleID Column from ParkingSlot Table is again added
-ALTER TABLE ParkingSlot ADD VehicleID INT;
-
---Set VehicleID as FK but as NULLABLE
-ALTER TABLE ParkingSlot
-ADD CONSTRAINT FK_PersonOrder
-FOREIGN KEY (VehicleID) REFERENCES Vehicle(VehicleID);

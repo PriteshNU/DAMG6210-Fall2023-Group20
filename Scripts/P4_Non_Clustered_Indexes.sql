@@ -1,3 +1,5 @@
+USE CMS;
+
 --------------------------------------------------------------------------------------------------------------------------------
 -- Non-Clustered Index to improve the performance of range queries and sorting
 CREATE NONCLUSTERED INDEX IDX_Visitor_VisitDate ON Visitor (VisitDate);

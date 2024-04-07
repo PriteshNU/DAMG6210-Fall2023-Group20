@@ -29,6 +29,8 @@ BEGIN
     VALUES (@ApartmentID, @FirstName, @LastName, @ContactNumber, @Email, @EmergencyContact, @OccupancyType, @EncryptedSSN);
 END;
 GO
+
+-- EXEC AddResident 100, 'John', 'Doe', '0987654322', 'johndoe@email.com', NULL, 'Owner', '123-45-6789';
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -86,15 +88,17 @@ BEGIN
         JOIN Apartment a ON b.BuildingID = a.BuildingID
         JOIN Resident r ON a.ApartmentID = r.ApartmentID
     WHERE
-        (@BuildingID IS NOT NULL AND b.BuildingID = @BuildingID)
+        ((@BuildingID IS NOT NULL AND b.BuildingID = @BuildingID)
         OR
-        (@BuildingID IS NULL AND b.[Name] = @BuildingName AND b.[Number] = @BuildingNumber)
+        (@BuildingID IS NULL AND b.[Name] = @BuildingName AND b.[Number] = @BuildingNumber))
         AND 
         (@OccupancyType IS NULL OR r.OccupancyType = @OccupancyType)
     ORDER BY
         a.ApartmentID, r.ResidentID;
 END;
 GO
+
+-- EXEC GetResidentsByBuilding @BuildingID=1, @OccupancyType='Tenant';
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -270,7 +274,7 @@ CREATE OR ALTER PROCEDURE SubmitServiceRequest
     @ScheduledDate DATE,
     @Priority VARCHAR(50),
     @RequestFee DECIMAL(10, 2) = NULL,
-    @OutputMessage NVARCHAR(500) OUTPUT
+    @OutputMessage VARCHAR(500) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -280,9 +284,9 @@ BEGIN
         RAISERROR('Resident not found.', 16, 1);
         RETURN;
     END
-
-    DECLARE @ServiceRequestID INT;
+ 
     DECLARE @StaffAssignedID INT = NULL;
+    DECLARE @StaffFullName VARCHAR(255);
     DECLARE @RoleRequired VARCHAR(50);
 
     -- Calculate fee if not provided and if the request type is Plumbing or Electrical
@@ -300,18 +304,18 @@ BEGIN
     -- Define the role of the staff required based on the request type
     SET @RoleRequired = 
     CASE 
-        WHEN @RequestType = 'Car Parking' THEN 'Parking Coordinator'
+        WHEN @RequestType = 'Car Parking' THEN 'ParkingCoordinator'
         WHEN @RequestType = 'Common Area' THEN 'Facilitator'
         WHEN @RequestType = 'Electrical' THEN 'Electrician'
         WHEN @RequestType = 'Plumbing' THEN 'Plumber'
-        WHEN @RequestType = 'Other' THEN 'Maintenance Specialist'
+        WHEN @RequestType = 'Other' THEN 'GeneralMaintenance'
     END
 
     -- Find an available staff member whose role matches the request type and
     -- who is not assigned to any service request on the ScheduledDate
-    SELECT TOP 1 @StaffAssignedID = s.StaffID
+    SELECT TOP 1 @StaffAssignedID = s.StaffID, @StaffFullName = CONCAT(s.FirstName, ' ', s.LastName)
     FROM Staff s
-    WHERE s.[Role] = @RoleRequired AND s.EmploymentEndDate < GETDATE()
+    WHERE s.[Role] = @RoleRequired AND (s.EmploymentEndDate < GETDATE() OR s.EmploymentEndDate IS NULL)
     AND NOT EXISTS (
         SELECT 1
         FROM ServiceRequest sr
@@ -320,31 +324,28 @@ BEGIN
     ORDER BY NEWID();
 
     -- Insert the service request into the table
-    INSERT INTO ServiceRequest (
-        ResidentID, [Description], RequestType, RequestDate, ScheduledDate, [Status], [Priority], RequestFee, StaffAssignedID
-    )
-    VALUES (
-        @ResidentID, @Description, @RequestType, GETDATE(), @ScheduledDate, 'Open', @Priority, @RequestFee, @StaffAssignedID
-    );
-
-    SET @ServiceRequestID = SCOPE_IDENTITY();
+    INSERT INTO ServiceRequest (ResidentID, [Description], RequestType, RequestDate, ScheduledDate, [Status], [Priority], RequestFee, StaffAssignedID)
+    VALUES (@ResidentID, @Description, @RequestType, GETDATE(), @ScheduledDate, 'Open', @Priority, @RequestFee, @StaffAssignedID);
 
     IF @StaffAssignedID IS NOT NULL
     BEGIN
-        SET @OutputMessage = 'Service request with ID ' + CAST(@ServiceRequestID AS VARCHAR) + 
-                             ' created successfully and assigned to staff with ID ' + 
-                             CAST(@StaffAssignedID AS VARCHAR) + '.';
+        SET @OutputMessage = 'Service request created successfully and assigned to staff ' + @StaffFullName + '.';
     END
     ELSE
     BEGIN
-        SET @OutputMessage = 'Service request with ID ' + CAST(@ServiceRequestID AS VARCHAR) + 
-                             ' created successfully but not assigned to any staff.';
+        SET @OutputMessage = 'Service request created successfully but not assigned to any staff.';
     END
-
 END;
 GO
 
+-- DECLARE @OutputMsg VARCHAR(500);
+-- EXEC SubmitServiceRequest 2, 'Test', 'Plumbing', '2024-08-05', 'High', NULL, @OutputMsg OUTPUT
+-- SELECT @OutputMsg;
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
 -- Procedure to insert Visitor Details, Visitor Logs, and ParkingSlot allotment
+GO
 CREATE PROCEDURE InsertVisitorDetailsAndParkingDetailsProcedure
     @FirstName VARCHAR(255),
     @LastName VARCHAR(255),
