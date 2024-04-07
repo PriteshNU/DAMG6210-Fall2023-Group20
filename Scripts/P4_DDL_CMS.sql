@@ -50,7 +50,7 @@ CREATE TABLE Resident (
     ApartmentID INT NOT NULL,
     FirstName VARCHAR(255) NOT NULL,
     LastName VARCHAR(255) NOT NULL,
-    ContactNumber VARCHAR(20) NOT NULL UNIQUE,
+    ContactNumber VARCHAR(20) NOT NULL,
     Email VARCHAR(255),
     EmergencyContact VARCHAR(20),
     OccupancyType VARCHAR(50),
@@ -75,7 +75,8 @@ CREATE TABLE Staff (
     EmployeeStartDate DATE NOT NULL,
     EmploymentEndDate DATE,
 
-	CONSTRAINT Staff_PK PRIMARY KEY (StaffID)
+	CONSTRAINT Staff_PK PRIMARY KEY (StaffID),
+    CONSTRAINT Staff_Role_CHK CHECK ([Role] IN ('ParkingCoordinator', 'Facilitator', 'Electrician', 'Plumber', 'GeneralMaintenance')),
 );
 
 CREATE TABLE Payment (

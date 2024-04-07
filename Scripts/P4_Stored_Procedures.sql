@@ -177,7 +177,7 @@ CREATE OR ALTER PROCEDURE MakePayment
     @PaymentMethod VARCHAR(50),
     @PaymentMethodLastFour VARCHAR(4),
     @EntityID INT,
-    @TransactionRefNum UNIQUEIDENTIFIER OUTPUT
+    @OutputMessage VARCHAR(500) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -198,6 +198,7 @@ BEGIN
     DECLARE @PaymentID INT;
     DECLARE @PaymentDate DATETIME = GETDATE();
     DECLARE @BalanceAmount DECIMAL(10, 2);
+    DECLARE @TransactionRefNum UNIQUEIDENTIFIER;
 
     IF @PaymentType = 'Maintenance'
     BEGIN
@@ -246,16 +247,24 @@ BEGIN
             SET [Status] = 'Paid'
             WHERE InvoiceID = @EntityID;
         END
+
+        SET @OutputMessage = 'Payment successful for Invoice Number: ' + (SELECT [Number] FROM Invoice WHERE InvoiceID = @EntityID) 
+                            + ' ' + CASE WHEN @BalanceAmount > 0 THEN 'partially' ELSE 'fully' END
+                            + ' | Transaction Reference Number:' + CAST(@TransactionRefNum AS VARCHAR(36));
     END
     ELSE IF @PaymentType = 'ServiceRequest'
     BEGIN
         INSERT INTO ServiceRequestFee (PaymentID, ServiceRequestID)
         VALUES (@PaymentID, @EntityID);
+
+        SET @OutputMessage = 'Payment successful for Service Request';
     END
     ELSE IF @PaymentType = 'AmenityBooking'
     BEGIN
         INSERT INTO AmenityBookingFee (PaymentID, AmenityBookingID)
         VALUES (@PaymentID, @EntityID);
+
+        SET @OutputMessage = 'Payment successful for Amenity Booking';
     END
 END;
 GO
