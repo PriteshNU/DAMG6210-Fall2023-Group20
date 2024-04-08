@@ -111,6 +111,60 @@ JOIN
 WHERE
     ab.BookingDate >= CAST(GETDATE() AS DATE);
 GO
+
+GO
+CREATE OR ALTER VIEW vw_TodayAmenityBookings AS
+SELECT 
+    A.AmenityID,
+    A.[Name] AS AmenityName,
+    A.[Location] AS AmenityLocation,
+    AB.BookingDate,
+    AB.StartTime,
+    AB.EndTime,
+    AB.NumOfAttendees,
+    R.FirstName AS ResidentFirstName,
+    R.LastName AS ResidentLastName
+FROM AmenityBooking AB
+JOIN Amenity A ON AB.AmenityID = A.AmenityID
+JOIN Resident R ON AB.ResidentID = R.ResidentID
+WHERE CONVERT(DATE, AB.BookingDate) = CONVERT(DATE, GETDATE());
+GO
+
+--------------------------------------------------------------------------------------------------------------------------------
+CREATE OR ALTER VIEW vw_MonthlyVisitorCount AS
+SELECT
+    r.ResidentID,
+    r.FirstName + ' ' + r.LastName AS ResidentName,
+    YEAR(v.VisitDate) AS VisitYear,
+    CASE 
+        WHEN MONTH(v.VisitDate) = 1 THEN 'January'
+        WHEN MONTH(v.VisitDate) = 2 THEN 'February'
+        WHEN MONTH(v.VisitDate) = 3 THEN 'March'
+        WHEN MONTH(v.VisitDate) = 4 THEN 'April'
+		WHEN MONTH(v.VisitDate) = 5 THEN 'May'
+		WHEN MONTH(v.VisitDate) = 6 THEN 'June'
+		WHEN MONTH(v.VisitDate) = 7 THEN 'July'
+		WHEN MONTH(v.VisitDate) = 8 THEN 'August'
+		WHEN MONTH(v.VisitDate) = 9 THEN 'September'
+		WHEN MONTH(v.VisitDate) = 10 THEN 'October'
+		WHEN MONTH(v.VisitDate) = 11 THEN 'November'
+		WHEN MONTH(v.VisitDate) = 12 THEN 'December'
+    END AS VisitMonth,
+    COUNT(*) AS VisitorCount
+FROM
+    Resident r
+JOIN
+    VisitorLog vl ON r.ResidentID = vl.ResidentID
+JOIN 
+    Visitor v ON vl.VisitorID = v.VisitorID
+GROUP BY
+    r.ResidentID,
+    r.FirstName,
+    r.LastName,
+    YEAR(v.VisitDate),
+    MONTH(v.VisitDate);
+
+GO
 --------------------------------------------------------------------------------------------------------------------------------
 
 

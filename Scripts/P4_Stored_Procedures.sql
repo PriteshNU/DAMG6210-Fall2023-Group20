@@ -360,16 +360,17 @@ GO
 --------------------------------------------------------------------------------------------------------------------------------
 -- Procedure to insert Visitor Details, Visitor Logs, and ParkingSlot allotment
 GO
-CREATE PROCEDURE InsertVisitorDetailsAndParkingDetailsProcedure
+CREATE OR ALTER PROCEDURE InsertVisitorDetailsAndParkingDetailsProcedure
     @FirstName VARCHAR(255),
     @LastName VARCHAR(255),
     @ContactNumber VARCHAR(20),
     @VisitDate DATE,
     @ResidentID INT,
-    @LicensePlate VARCHAR(255) = NULL,
-    @Make VARCHAR(255) = NULL,
-    @Model VARCHAR(255) = NULL,
-    @VehicleType VARCHAR(255) = NULL,
+	@VisitPurpose VARCHAR(255),
+    @LicensePlate VARCHAR(255),
+    @Make VARCHAR(255),
+    @Model VARCHAR(255),
+    @VehicleType VARCHAR(255),
     @OutputMessage VARCHAR(255) OUTPUT
 AS
 BEGIN
@@ -380,58 +381,44 @@ BEGIN
     DECLARE @ParkingSlotID INT;
     DECLARE @ApartmentVisited INT;
 
-    -- If Visit date is not passed by the user then set current system date
     IF @VisitDate IS NULL
     BEGIN
         SET @VisitDate = GETDATE();
     END;
 
-    -- Set entry time to current system time
     SET @EntryTime = GETDATE();
 
-    -- Insert visitor details into Visitor table
     INSERT INTO Visitor (FirstName, LastName, ContactNumber, VisitDate, EntryTime)
     VALUES (@FirstName, @LastName, @ContactNumber, @VisitDate, @EntryTime);
 
-    -- Retrieve the ID of the inserted visitor
     SET @VisitorID = SCOPE_IDENTITY();
 
-    -- Check if vehicle details are provided
     IF @LicensePlate IS NOT NULL AND @Make IS NOT NULL AND @Model IS NOT NULL AND @VehicleType IS NOT NULL
     BEGIN
-        -- Insert visitor's vehicle details into Vehicle table
         INSERT INTO Vehicle (OwnerID, LicensePlate, Make, Model, [Type])
         VALUES (@VisitorID, @LicensePlate, @Make, @Model, @VehicleType);
 
-        -- Retrieve the ID of the inserted vehicle
         SET @VehicleID = SCOPE_IDENTITY();
 
-        -- Find an available parking slot that is not reserved for apartments
         SELECT TOP 1 @ParkingSlotID = ParkingSlotID
         FROM ParkingSlot
         WHERE [Type] = 'Guest' AND [Status] = 'Available';
 
-        -- If a parking slot is found, park the vehicle
         IF @ParkingSlotID IS NOT NULL
         BEGIN
-            -- Update parking slot status to Occupied
             UPDATE ParkingSlot
             SET [Status] = 'Occupied', VehicleID = @VehicleID
             WHERE ParkingSlotID = @ParkingSlotID;
         END;
     END;
 
-    -- Log visitor info into VisitorLog table
-    INSERT INTO VisitorLog (VisitorID, ResidentID)
-    VALUES (@VisitorID, @ResidentID);
+    INSERT INTO VisitorLog (VisitorID, ResidentID, Purpose)
+    VALUES (@VisitorID, @ResidentID, @visitPurpose);
 
-    -- Get the ID of the apartment visited by the visitor
     SELECT @ApartmentVisited = ApartmentID FROM Resident WHERE ResidentID = @ResidentID;
 
-    -- Set output message
     SET @OutputMessage = CONCAT('Name: ', @FirstName, ' ', @LastName, ' | ');
 
-    -- Append vehicle information to output message if vehicle details provided
     IF @LicensePlate IS NOT NULL AND @Make IS NOT NULL AND @Model IS NOT NULL AND @VehicleType IS NOT NULL
     BEGIN
         SET @OutputMessage = CONCAT(@OutputMessage, 'Vehicle parked at Slot: ', CAST(@ParkingSlotID AS VARCHAR(20)), ' | ');
