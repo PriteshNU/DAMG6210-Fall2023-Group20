@@ -1,7 +1,7 @@
 USE CMS;
 
 --------------------------------------------------------------------------------------------------------------------------------
--- View to get summary of service requests
+-- View to generate reports on service requests
 GO
 CREATE OR ALTER VIEW vw_ServiceRequestSummary 
 AS
@@ -85,6 +85,7 @@ SELECT TOP 5
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------
+-- views to generate reports on amenity bookings
 GO
 CREATE  OR ALTER VIEW vw_AmenityBookingsDetails
 AS
@@ -114,6 +115,7 @@ GO
 
 
 --------------------------------------------------------------------------------------------------------------------------------
+-- views to generate reports on parking
 GO
 CREATE  OR ALTER VIEW vw_OccupiedParkingDetails
 AS
@@ -153,31 +155,53 @@ GROUP BY
     [Type];
 GO
 
-GO
-CREATE  OR ALTER VIEW vw_VisitorParkingTrends AS
-SELECT
-    VisitorID,
-    COUNT(*) AS NumberOfVisits,
-    AVG(DATEDIFF(MINUTE, EntryTime, ExitTime)) AS AverageDuration,
-    MAX(EntryTime) AS LastVisit
-FROM
-    Visitor
-GROUP BY
-    VisitorID;
-GO
-
-GO
-CREATE  OR ALTER VIEW vw_VehicleParkingSlotMapping AS
-SELECT
+CREATE VIEW OccupiedGuestParking 
+AS
+SELECT 
+    ps.ParkingSlotID,
+    ps.[Type] AS ParkingSlotType,
     v.LicensePlate,
     v.Make,
     v.Model,
-    p.ParkingSlotID,
-    p.[Type],
-    p.[Status]
-FROM
-    Vehicle v
-JOIN
-    ParkingSlot p ON v.VehicleID = p.VehicleID;
+    vis.VisitorID,
+    vis.FirstName,
+    vis.LastName,
+    vis.ExitTime
+FROM 
+    ParkingSlot ps
+JOIN 
+    Vehicle v ON ps.VehicleID = v.VehicleID
+JOIN 
+    Visitor vis ON v.OwnerID = vis.VisitorID
+WHERE 
+    ps.[Type] = 'Guest' AND 
+    ps.[Status] = 'Occupied' AND
+    vis.ExitTime IS NOT NULL;
 GO
 --------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- views to generate reports on residents and apartments
+GO
+CREATE VIEW vw_ApartmentResidentSummary 
+AS
+SELECT 
+    b.BuildingID,
+    b.[Name] AS BuildingName,
+    b.[Number] AS BuildingNumber,
+    a.ApartmentID,
+    a.[Number] AS ApartmentNumber,
+    COUNT(r.ResidentID) AS NumberOfResidents
+FROM 
+    Building b
+JOIN 
+    Apartment a ON b.BuildingID = a.BuildingID
+LEFT JOIN 
+    Resident r ON a.ApartmentID = r.ApartmentID
+GROUP BY 
+    b.BuildingID, 
+    b.[Name], 
+    b.[Number], 
+    a.ApartmentID, 
+    a.[Number];
+GO

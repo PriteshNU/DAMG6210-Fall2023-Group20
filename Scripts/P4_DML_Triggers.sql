@@ -80,3 +80,35 @@ BEGIN
 END;
 GO
 --------------------------------------------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------------------------------------------------
+-- Trigger to unpark visitor's vehicle after visitor exits
+CREATE TRIGGER trg_AfterVisitorExit
+ON Visitor
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF UPDATE(ExitTime)
+    BEGIN
+        DECLARE @VehicleID INT;
+
+        SELECT @VehicleID = v.VehicleID
+        FROM inserted i
+        JOIN Vehicle v ON v.OwnerID = i.VisitorID 
+        WHERE i.ExitTime IS NOT NULL AND i.VisitorID = v.OwnerID;
+
+        IF @VehicleID IS NOT NULL
+        BEGIN
+            UPDATE ParkingSlot
+            SET VehicleID = NULL, [Status] = 'Available'
+            WHERE VehicleID = @VehicleID;
+
+            DELETE FROM Vehicle
+            WHERE VehicleID = @VehicleID;
+        END
+    END
+END;
+GO
+-------------------------------------------------------------------------------------------------------------------------------
