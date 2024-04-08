@@ -165,7 +165,8 @@ CREATE TABLE ServiceRequest (
     CONSTRAINT ServiceRequest_StaffAssignedID_FK FOREIGN KEY (StaffAssignedID) REFERENCES Staff(StaffID),
 
     CONSTRAINT ServiceRequest_RequestType_CHK CHECK ([RequestType] IN ('Plumbing', 'Electrical', 'Car Parking', 'Common Area', 'Other')),
-    CONSTRAINT ServiceRequest_Priority_CHK CHECK ([Priority] IN ('High', 'Medium', 'Low'))
+    CONSTRAINT ServiceRequest_Priority_CHK CHECK ([Priority] IN ('High', 'Medium', 'Low')),
+    CONSTRAINT ServiceRequest_Status_CHK CHECK ([Status] IN ('Open', 'Resolved'))
 );
 
 CREATE TABLE ServiceRequestFee (

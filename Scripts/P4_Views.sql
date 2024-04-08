@@ -144,7 +144,6 @@ GO
 CREATE  OR ALTER VIEW vw_ParkingSlotUtilization AS
 SELECT
     [Type],
-    [Status],
     COUNT(*) AS TotalSlots,
     SUM(CASE WHEN [Status] = 'Occupied' THEN 1 ELSE 0 END) AS OccupiedSlots,
     SUM(CASE WHEN [Status] = 'Available' THEN 1 ELSE 0 END) AS AvailableSlots
