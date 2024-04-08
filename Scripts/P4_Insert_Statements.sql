@@ -180,18 +180,48 @@ VALUES
 
 --------------------------------------------------------------------------------------------------------------------------------
 -- Insert statements for the Payment table
-INSERT INTO Payment (ResidentID, Amount, PaymentDate, PaymentType, [Status], PaymentMethod, PaymentMethodLastFour)
-VALUES
-(1, 100.00, '2023-01-15', 'Maintenance', 'Paid', 'CC', '1234'),
-(2, 50.00, '2023-01-20', 'AmenityBooking', 'Paid', 'ACH', '5678'),
-(3, 75.00, '2023-01-25', 'ServiceRequest', 'Partial', 'Cash', '9012'),
-(4, 125.00, '2023-02-05', 'Maintenance', 'Paid', 'CC', '3456'),
-(5, 60.00, '2023-02-10', 'AmenityBooking', 'Partial', 'ACH', '7890'),
-(6, 80.00, '2023-02-15', 'ServiceRequest', 'Cancelled', 'Cash', '2345'),
-(7, 150.00, '2023-03-05', 'Maintenance', 'Paid', 'CC', '6789'),
-(8, 70.00, '2023-03-10', 'AmenityBooking', 'Paid', 'ACH', '0123'),
-(9, 90.00, '2023-03-15', 'ServiceRequest', 'Partial', 'Cash', '4567'),
-(10, 200.00, '2023-04-05', 'Maintenance', 'Paid', 'CC', '8901');
+DECLARE @paymentOutputMsg VARCHAR(500);
+DECLARE @paymentCounter INT = 1;
+DECLARE @MaxRownum INT;
+
+DECLARE @InvoiceDataTemp TABLE (
+    Rownum INT IDENTITY(1,1),
+    ResidentID INT,
+    InvoiceID INT,
+    InvoiceTotalAmount DECIMAL(10, 2)
+);
+
+INSERT INTO @InvoiceDataTemp (ResidentID, InvoiceID, InvoiceTotalAmount)
+SELECT DISTINCT r.ResidentID, i.InvoiceID, i.TotalAmount
+FROM Invoice i
+JOIN Apartment a ON a.ApartmentID = i.ApartmentID
+JOIN Resident r ON r.ApartmentID = a.ApartmentID
+WHERE i.[Status] != 'Paid';
+
+SELECT @MaxRownum = MAX(Rownum) FROM @InvoiceDataTemp;
+DECLARE @Midpoint INT = (@MaxRownum / 2) + (@MaxRownum % 2);
+
+WHILE @paymentCounter <= @MaxRownum
+BEGIN
+    DECLARE @CurrentResidentID INT;
+    DECLARE @CurrentInvoiceID INT;
+    DECLARE @CurrentTotalAmount DECIMAL(10, 2);
+
+    SELECT @CurrentResidentID = ResidentID, @CurrentInvoiceID= InvoiceID, @CurrentTotalAmount = InvoiceTotalAmount
+    FROM @InvoiceDataTemp
+    WHERE Rownum = @paymentCounter;
+
+    IF @paymentCounter > @Midpoint
+    BEGIN
+        SET @CurrentTotalAmount = @CurrentTotalAmount - 500;
+    END
+
+    EXEC dbo.MakePayment @ResidentID = @CurrentResidentID, @Amount = @CurrentTotalAmount, @PaymentType = 'Maintenance', @PaymentMethod = 'CC', @PaymentMethodLastFour = '1979', @EntityID = @CurrentInvoiceID, @OutputMessage = @paymentOutputMsg OUTPUT;
+
+    PRINT @paymentOutputMsg;
+
+    SET @paymentCounter = @paymentCounter + 1;
+END;
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------

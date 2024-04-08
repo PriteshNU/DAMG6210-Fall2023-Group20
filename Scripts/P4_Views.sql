@@ -22,7 +22,23 @@ FROM
     LEFT JOIN Staff s ON sr.StaffAssignedID = s.StaffID;
 GO
 
-CREATE VIEW vw_TotalServiceRequestsByType
+GO
+CREATE VIEW vw_ServiceRequestByStatus AS
+SELECT
+    sr.Status,
+    YEAR(sr.RequestDate) AS Year,
+    MONTH(sr.RequestDate) AS Month,
+    COUNT(*) AS NumberOfRequests
+FROM
+    ServiceRequest sr
+GROUP BY
+    sr.Status, YEAR(sr.RequestDate), MONTH(sr.RequestDate)
+HAVING
+    sr.[Status] = 'Open';
+GO
+
+GO
+CREATE VIEW vw_ServiceRequestByType
 AS
 SELECT
     sr.RequestType,
@@ -30,9 +46,26 @@ SELECT
 FROM
     ServiceRequest sr
 GROUP BY
-    RequestType;
+    sr.RequestType
+HAVING
+    sr.[Status] = 'Open';
 GO
 
+GO
+CREATE VIEW vw_ServiceRequestByPriority
+AS
+SELECT
+    sr.Priority,
+    COUNT(*) AS NumberOfRequests
+FROM
+    ServiceRequest sr
+GROUP BY
+    sr.Priority
+HAVING
+    sr.[Status] = 'Open';
+GO
+
+GO
 CREATE VIEW vw_StaffByMostServiceRequestAssigned
 AS
 SELECT TOP 5
@@ -47,6 +80,8 @@ SELECT TOP 5
         s.StaffID,
         s.FirstName,
         s.LastName
+    HAVING
+        sr.[Status] = 'Open'
     ORDER BY
         COUNT(sr.ServiceRequestID) DESC;
 --------------------------------------------------------------------------------------------------------------------------------
@@ -66,7 +101,7 @@ SELECT
     ab.NumOfAttendees,
     CASE 
         WHEN ab.BookingFee > 0 THEN '$' + CAST(ab.BookingFee AS VARCHAR)
-        ELSE 'Free'
+        ELSE 'N/A'
     END AS BookingFee
 FROM
     AmenityBooking ab
@@ -105,5 +140,47 @@ LEFT JOIN
     Vehicle vehicle ON ps.VehicleID = vehicle.VehicleID
 WHERE
     ps.Status = 'Occupied';
+GO
+
+GO
+CREATE VIEW ParkingSlotUtilization AS
+SELECT
+    [Type],
+    [Status],
+    COUNT(*) AS TotalSlots,
+    SUM(CASE WHEN [Status] = 'Occupied' THEN 1 ELSE 0 END) AS OccupiedSlots,
+    SUM(CASE WHEN [Status] = 'Available' THEN 1 ELSE 0 END) AS AvailableSlots
+FROM
+    ParkingSlot
+GROUP BY
+    [Type];
+GO
+
+GO
+CREATE VIEW VisitorParkingTrends AS
+SELECT
+    VisitorID,
+    COUNT(*) AS NumberOfVisits,
+    AVG(DATEDIFF(MINUTE, EntryTime, ExitTime)) AS AverageDuration,
+    MAX(EntryTime) AS LastVisit
+FROM
+    Visitor
+GROUP BY
+    VisitorID;
+GO
+
+GO
+CREATE VIEW VehicleParkingSlotMapping AS
+SELECT
+    v.LicensePlate,
+    v.Make,
+    v.Model,
+    p.ParkingSlotID,
+    p.[Type],
+    p.[Status]
+FROM
+    Vehicle v
+JOIN
+    ParkingSlot p ON v.VehicleID = p.VehicleID;
 GO
 --------------------------------------------------------------------------------------------------------------------------------
