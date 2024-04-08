@@ -242,13 +242,9 @@ BEGIN
         INSERT INTO MaintenanceFee (PaymentID, InvoiceID, BalanceAmount)
         VALUES (@PaymentID, @EntityID, @BalanceAmount);
 
-        -- Update the Invoice status
-        IF @BalanceAmount = 0
-        BEGIN
-            UPDATE Invoice
-            SET [Status] = 'Paid'
-            WHERE InvoiceID = @EntityID;
-        END
+        UPDATE Invoice
+        SET [Status] = CASE WHEN @BalanceAmount > 0 THEN 'Partial' ELSE 'Paid' END
+        WHERE InvoiceID = @EntityID;
 
         SET @OutputMessage = 'Payment successful for Invoice Number: ' + (SELECT [Number] FROM Invoice WHERE InvoiceID = @EntityID) 
                             + ' ' + CASE WHEN @BalanceAmount > 0 THEN 'partially' ELSE 'fully' END
@@ -270,6 +266,10 @@ BEGIN
     END
 END;
 GO
+
+-- DECLARE @OutputMsg VARCHAR(500);
+-- EXEC MakePayment @ResidentID=2, @Amount= 1000, @PaymentType= 'Maintenance', @PaymentMethod='CC', @PaymentMethodLastFour='8267', @EntityID=2, @OutputMessage= OUTPUT
+-- SELECT @OutputMsg;
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------

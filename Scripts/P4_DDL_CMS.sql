@@ -105,7 +105,7 @@ CREATE FUNCTION GenerateInvoiceNumber (@InvoiceID INT, @IssueDate DATE)
 RETURNS VARCHAR(50)
 AS
 BEGIN
-    RETURN'INV-' + REPLACE(CONVERT(VARCHAR, @IssueDate, 112), '-', '') + '-' + RIGHT('0000' + CAST(@InvoiceID AS VARCHAR), 4);
+    RETURN 'INV-' + REPLACE(CONVERT(VARCHAR(20), @IssueDate, 112), '-', '') + '-' + RIGHT('0000' + CAST(@InvoiceID AS VARCHAR(20)), 4);
 END;
 GO
 --------------------------------------------------------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ CREATE TABLE Invoice (
     CONSTRAINT Invoice_PK PRIMARY KEY (InvoiceID),
     CONSTRAINT Invoice_ApartmentID_FK FOREIGN KEY (ApartmentID) REFERENCES Apartment(ApartmentID),
 
-    CONSTRAINT Invoice_Status_CHK CHECK ([Status] IN ('Issued', 'Paid', 'Overdue'))
+    CONSTRAINT Invoice_Status_CHK CHECK ([Status] IN ('Issued', 'Paid', 'Partial', 'Overdue'))
 );
 
 CREATE TABLE MaintenanceFee (
@@ -135,12 +135,25 @@ CREATE TABLE MaintenanceFee (
     CONSTRAINT MaintenanceFee_InvoiceID_FK FOREIGN KEY (InvoiceID) REFERENCES Invoice(InvoiceID)
 );
 
+--------------------------------------------------------------------------------------------------------------------------------
+-- Function to generate unique service request number
+GO
+CREATE FUNCTION GenerateServiceRequestNumber (@ServiceRequestID INT, @RequestDate DATETIME)
+RETURNS VARCHAR(50)
+AS
+BEGIN
+    RETURN 'SR-' + REPLACE(CONVERT(VARCHAR(20), @RequestDate, 112), '-', '') + '-' + RIGHT('0000' + CAST(@ServiceRequestID AS VARCHAR(20)), 4);
+END;
+GO
+--------------------------------------------------------------------------------------------------------------------------------
+
 CREATE TABLE ServiceRequest (
     ServiceRequestID INT IDENTITY(1,1) NOT NULL,
     ResidentID INT NOT NULL,
+    [Number] AS (dbo.GenerateServiceRequestNumber(ServiceRequestID, RequestDate)),
     [Description] VARCHAR(2500) NULL,
     RequestType VARCHAR(50) NOT NULL,
-    RequestDate DATE NOT NULL,
+    RequestDate DATE NOT NULL DEFAULT GETDATE(),
     ScheduledDate DATE,
     [Status] VARCHAR(50) NOT NULL,
     [Priority] VARCHAR(50),
