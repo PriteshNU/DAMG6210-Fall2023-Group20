@@ -326,13 +326,15 @@ BEGIN
     -- who is not assigned to any service request on the ScheduledDate
     SELECT TOP 1 @StaffAssignedID = s.StaffID, @StaffFullName = CONCAT(s.FirstName, ' ', s.LastName)
     FROM Staff s
-    WHERE s.[Role] = @RoleRequired AND (s.EmploymentEndDate < GETDATE() OR s.EmploymentEndDate IS NULL)
-    AND NOT EXISTS (
-        SELECT 1
+    OUTER APPLY (
+        SELECT COUNT(*) AS Assignments
         FROM ServiceRequest sr
-        WHERE sr.StaffAssignedID = s.StaffID AND sr.ScheduledDate = @ScheduledDate
-        HAVING COUNT(*) >= 5
-    )
+        WHERE sr.StaffAssignedID = s.StaffID
+        AND sr.ScheduledDate = @ScheduledDate
+    ) as AssignmentCount
+    WHERE s.[Role] = @RoleRequired
+    AND (s.EmploymentEndDate < GETDATE() OR s.EmploymentEndDate IS NULL)
+    AND AssignmentCount.Assignments < 5
     ORDER BY NEWID();
 
     -- Insert the service request into the table
@@ -351,7 +353,7 @@ END;
 GO
 
 -- DECLARE @OutputMsg VARCHAR(500);
--- EXEC SubmitServiceRequest @ResidentID=2, @Description='Test', @RequestType='Plumbing', @ScheduledDate='2024-08-05', @Priority='High', @RequestFee=NULL, @OutputMessage=@OutputMsg OUTPUT
+-- EXEC SubmitServiceRequest @ResidentID=7, @Description='Test', @RequestType='Plumbing', @ScheduledDate='2024-08-05', @Priority='High', @RequestFee=NULL, @OutputMessage=@OutputMsg OUTPUT
 -- SELECT @OutputMsg;
 --------------------------------------------------------------------------------------------------------------------------------
 

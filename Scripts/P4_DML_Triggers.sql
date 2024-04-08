@@ -3,7 +3,7 @@ USE CMS;
 --------------------------------------------------------------------------------------------------------------------------------
 -- Trigger to update the lease end date for tenant residents based on the start date of the lease
 GO
-CREATE TRIGGER trg_UpdateLeaseEndDate
+CREATE OR ALTER TRIGGER trg_UpdateLeaseEndDate
 ON Apartment
 AFTER INSERT, UPDATE
 AS
@@ -21,7 +21,7 @@ GO
 -------------------------------------------------------------------------------------------------------------------------------
 -- Trigger to update service request if the scheduled date is updated
 GO
-CREATE TRIGGER trg_UpdateServiceRequest
+CREATE OR ALTER TRIGGER trg_UpdateServiceRequest
 ON ServiceRequest
 AFTER UPDATE
 AS
@@ -64,15 +64,14 @@ BEGIN
         BEGIN    
             SELECT TOP 1 @UpdatedStaffAssignedID = s.StaffID
             FROM Staff s
-            WHERE s.[Role] = @RoleRequired AND (s.EmploymentEndDate < GETDATE() OR s.EmploymentEndDate IS NULL)
-            AND NOT EXISTS (
-                SELECT 1
+            OUTER APPLY (
+                SELECT COUNT(*) AS Assignments
                 FROM ServiceRequest sr
                 WHERE sr.StaffAssignedID = s.StaffID AND sr.ScheduledDate = @UpdatedScheduledDate AND sr.ServiceRequestID != @ServiceRequestID
-                HAVING COUNT(*) >= 5
-            )
+            ) as AssignmentCount
+            WHERE s.[Role] = @RoleRequired AND (s.EmploymentEndDate < GETDATE() OR s.EmploymentEndDate IS NULL) AND AssignmentCount.Assignments < 5
             ORDER BY NEWID();
-
+            
             UPDATE ServiceRequest
             SET StaffAssignedID = @UpdatedStaffAssignedID
             WHERE ServiceRequestID = @ServiceRequestID;
