@@ -202,19 +202,46 @@ VALUES
 (7, 3, 0.00),
 (10, 4, 0.00);
 
+--------------------------------------------------------------------------------------------------------------------------------
 -- Insert statements for the ServiceRequest table
-INSERT INTO ServiceRequest (ResidentID, [Description], RequestType, RequestDate, ScheduledDate, [Status], [Priority], RequestFee, StaffAssignedID)
-VALUES
-(1, 'Leaky faucet', 'Plumbing', '2023-01-05', '2023-01-10', 'Completed', 'Medium', 50.00, 2),
-(2, 'Broken window', 'Maintenance', '2023-01-10', '2023-01-15', 'In Progress', 'High', 75.00, 3),
-(3, 'Clogged drain', 'Plumbing', '2023-01-15', NULL, 'Open', 'Low', 100.00, NULL),
-(4, 'Faulty electrical outlet', 'Electrical', '2023-02-05', '2023-02-10', 'Completed', 'Medium', 125.00, 5),
-(5, 'AC not working', 'HVAC', '2023-02-10', NULL, 'Open', 'High', 60.00, NULL),
-(6, 'Broken lock', 'Security', '2023-02-15', '2023-02-20', 'Cancelled', 'Low', 80.00, 7),
-(7, 'Leaking roof', 'Roofing', '2023-03-05', '2023-03-10', 'Completed', 'Medium', 150.00, 8),
-(8, 'Paint chipping', 'Maintenance', '2023-03-10', '2023-03-15', 'In Progress', 'High', 70.00, 9),
-(9, 'Furniture assembly', 'Furniture', '2023-03-15', NULL, 'Open', 'Low', 90.00, NULL),
-(10, 'Pest control', 'Pest Control', '2023-04-05', '2023-04-10', 'Completed', 'Medium', 200.00, 10);
+DECLARE @sr INT = 1;
+DECLARE @RequestType VARCHAR(50);
+DECLARE @ScheduledDate DATE;
+DECLARE @Priority VARCHAR(50);
+DECLARE @srOutputMsg VARCHAR(500);
+
+WHILE @sr <= 20
+BEGIN
+    SET @RequestType = CASE ABS(CHECKSUM(NEWID())) % 5
+                            WHEN 0 THEN 'Plumbing'
+                            WHEN 1 THEN 'Electrical'
+                            WHEN 2 THEN 'Car Parking'
+                            WHEN 3 THEN 'Common Area'
+                            ELSE 'Other'
+                        END;
+
+    SET @ScheduledDate = DATEADD(DAY, ABS(CHECKSUM(NEWID())) % 365, GETDATE() + 1);
+
+    SET @Priority = CASE ABS(CHECKSUM(NEWID())) % 3
+                        WHEN 0 THEN 'High'
+                        WHEN 1 THEN 'Medium'
+                        ELSE 'Low'
+                    END;
+
+    EXEC dbo.SubmitServiceRequest 
+        @ResidentID = @sr, 
+        @Description = 'Test Description', 
+        @RequestType = @RequestType, 
+        @ScheduledDate = @ScheduledDate, 
+        @Priority = @Priority, 
+        @RequestFee = NULL, 
+        @OutputMessage = @srOutputMsg OUTPUT;
+
+    PRINT @srOutputMsg;
+
+    SET @sr = @sr + 1;
+END;
+--------------------------------------------------------------------------------------------------------------------------------
 
 -- Insert statements for the ServiceRequestFee table
 INSERT INTO ServiceRequestFee (PaymentID, ServiceRequestID)
@@ -289,37 +316,69 @@ VALUES
 (7, 4),
 (9, 5);
 
+--------------------------------------------------------------------------------------------------------------------------------
 -- Insert statements for the Amenity table
 INSERT INTO Amenity ([Name], [Location], Capacity, AvailabilityHours, ReservationRequired)
 VALUES
-('Gym', 'Building A, Floor 1', 20, '06:00 - 22:00', 0),
-('Pool', 'Building B, Rooftop', 50, '08:00 - 20:00', 1),
-('Clubhouse', 'Building C, Basement', 30, '09:00 - 23:00', 0),
-('BBQ Area', 'Building D, Courtyard', 10, '10:00 - 18:00', 1),
-('Business Center', 'Building E, Floor 2', 15, '08:00 - 18:00', 1),
-('Dog Park', 'Building F, Park', 10, '07:00 - 19:00', 0),
-('Playground', 'Building G, Courtyard', 20, '09:00 - 17:00', 0),
-('Tennis Court', 'Building H, Rooftop', 2, '08:00 - 22:00', 1),
-('Movie Theater', 'Building I, Floor 3', 25, '12:00 - 22:00', 1),
-('Spa', 'Building J, Basement', 5, '10:00 - 20:00', 1);
+('Gym', 'Longwood A, Floor 1', 20, '06:00 - 22:00', 0),
+('Pool', 'Clubhouse, GroundFloor', 50, '08:00 - 20:00', 1),
+('BBQ Area', 'Longwood B, Courtyard', 10, '10:00 - 18:00', 1),
+('Business Center', 'Oakridge Apt, Floor 2', 15, '08:00 - 18:00', 1),
+('Dog Park', 'MissionHill A, Park', 10, '07:00 - 19:00', 0),
+('Playground', 'Lakeview A, Courtyard', 20, '09:00 - 17:00', 0),
+('Tennis Court', 'Clubhouse, Rooftop', 2, '08:00 - 22:00', 1),
+('Golf Court', 'Riverside, Front', 2, '08:00 - 22:00', 1),
+('Movie Theater', 'Clubhouse, Floor 3', 25, '12:00 - 22:00', 0),
+('Spa', 'Clubhouse, Basement', 5, '10:00 - 20:00', 1);
+--------------------------------------------------------------------------------------------------------------------------------
 
-ALTER TABLE Amenity
-ALTER COLUMN AvailabilityHours VARCHAR(50)
+--------------------------------------------------------------------------------------------------------------------------------
+-- Insert statements for the randomly generating data for AmenityBooking table
+DECLARE @ab INT = 1;
+DECLARE @AmenityID INT;
+DECLARE @BookingDate DATE;
+DECLARE @StartTime TIME;
+DECLARE @EndTime TIME;
+DECLARE @BookingFee DECIMAL(10, 2);
+DECLARE @NumOfAttendees INT;
+DECLARE @abOutputMsg VARCHAR(500);
 
--- Insert statements for the AmenityBooking table
-INSERT INTO AmenityBooking (AmenityID, ResidentID, BookingDate, StartTime, EndTime, BookingFee, NumOfAttendees)
-VALUES
-(1, 1, '2023-01-01', '08:00:00', '09:00:00', 25.00, 1),
-(2, 2, '2023-01-02', '09:00:00', '10:00:00', 30.00, 2),
-(3, 3, '2023-01-03', '10:00:00', '11:00:00', 20.00, 3),
-(4, 4, '2023-01-04', '11:00:00', '12:00:00', 15.00, 4),
-(5, 5, '2023-01-05', '12:00:00', '13:00:00', 40.00, 5),
-(6, 6, '2023-01-06', '13:00:00', '14:00:00', 35.00, 6),
-(7, 7, '2023-01-07', '14:00:00', '15:00:00', 45.00, 7),
-(8, 8, '2023-01-08', '15:00:00', '16:00:00', 50.00, 8),
-(9, 9, '2023-01-09', '16:00:00', '17:00:00', 55.00, 9),
-(10, 10, '2023-01-10', '17:00:00', '18:00:00', 60.00, 10);
+WHILE @ab <= 20
+BEGIN
+    SELECT TOP 1 @AmenityID = AmenityID
+    FROM Amenity
+    ORDER BY NEWID();
 
+    SET @BookingDate = DATEADD(DAY, ABS(CHECKSUM(NEWID())) % 365, GETDATE());
+
+    SELECT @StartTime = DATEADD(MINUTE, ABS(CHECKSUM(NEWID())) % 120, '08:00'),
+           @EndTime = DATEADD(MINUTE, ABS(CHECKSUM(NEWID())) % 120 + 60, '08:00');
+
+    IF @ab <= 5
+        SET @BookingFee = ROUND(RAND() * 100, 2);
+    ELSE
+        SET @BookingFee = NULL;
+
+    SET @NumOfAttendees = ABS(CHECKSUM(NEWID())) % 5 + 1;
+
+    -- Execute the procedure
+    EXEC dbo.BookAmenity 
+        @AmenityID = @AmenityID,
+        @ResidentID = @ab, 
+        @BookingDate = @BookingDate, 
+        @StartTime = @StartTime, 
+        @EndTime = @EndTime, 
+        @BookingFee = @BookingFee, 
+        @NumOfAttendees = @NumOfAttendees, 
+        @OutputMessage = @abOutputMsg OUTPUT;
+
+    PRINT @abOutputMsg;
+
+    SET @ab = @ab + 1;
+END;
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
 -- Insert statements for the AmenityBookingFee table
 INSERT INTO AmenityBookingFee (PaymentID, AmenityBookingID)
 VALUES
@@ -333,17 +392,4 @@ VALUES
 (8, 8),
 (9, 9),
 (10, 10);
-
--- Insert statements for the IncidentLog table
-INSERT INTO IncidentLog (IncidentDateTime, IncidentLocation, [Description], ActionTaken, ReportedBy, HandledBy, [Status])
-VALUES
-('2023-01-01 08:00:00', 'Building A', 'Water leak in hallway', 'Fixed pipe and cleaned area', 'David Brown', 'Emma Johnson', 'Resolved'),
-('2023-01-02 09:00:00', 'Building B', 'Elevator outage', 'Called technician for repairs', 'Emma Johnson', 'Ethan Williams', 'In Progress'),
-('2023-01-03 10:00:00', 'Building C', 'Fire alarm triggered', 'False alarm, no fire detected', 'Ethan Williams', 'Olivia Jones', 'Closed'),
-('2023-01-04 11:00:00', 'Building D', 'Suspicious activity in parking lot', 'Increased security patrols', 'Olivia Jones', 'Noah Garcia', 'Under Investigation'),
-('2023-01-05 12:00:00', 'Building E', 'Power outage on floor 3', 'Contacted utility company for restoration', 'Noah Garcia', 'Ava Martinez', 'Resolved'),
-('2023-01-06 13:00:00', 'Building F', 'Vandalism in common area', 'Reported incident to authorities', 'Ava Martinez', 'Liam Brown', 'Under Investigation'),
-('2023-01-07 14:00:00', 'Building G', 'Broken entry gate', 'Called maintenance for repairs', 'Liam Brown', 'Sophia Taylor', 'In Progress'),
-('2023-01-08 15:00:00', 'Building H', 'Theft in parking garage', 'Reviewed security footage', 'Sophia Taylor', 'Mason Thomas', 'Under Investigation'),
-('2023-01-09 16:00:00', 'Building I', 'Flooding in basement', 'Sump pump failure', 'Mason Thomas', 'Amelia Roberts', 'In Progress'),
-('2023-01-10 17:00:00', 'Building J', 'HVAC malfunction', 'Scheduled HVAC technician for repair', 'Amelia Roberts', 'Noah Garcia', 'In Progress');
+--------------------------------------------------------------------------------------------------------------------------------

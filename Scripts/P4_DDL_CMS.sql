@@ -151,6 +151,7 @@ CREATE TABLE ServiceRequest (
     CONSTRAINT ServiceRequest_ResidentID_FK FOREIGN KEY (ResidentID) REFERENCES Resident(ResidentID),
     CONSTRAINT ServiceRequest_StaffAssignedID_FK FOREIGN KEY (StaffAssignedID) REFERENCES Staff(StaffID),
 
+    CONSTRAINT ServiceRequest_RequestType_CHK CHECK ([RequestType] IN ('Plumbing', 'Electrical', 'Car Parking', 'Common Area', 'Other')),
     CONSTRAINT ServiceRequest_Priority_CHK CHECK ([Priority] IN ('High', 'Medium', 'Low'))
 );
 
@@ -224,7 +225,7 @@ CREATE TABLE Amenity (
     [Name] VARCHAR(255) NOT NULL,
     [Location] VARCHAR(255) NOT NULL,
     Capacity INT NOT NULL,
-    AvailabilityHours TIME NOT NULL,
+    AvailabilityHours VARCHAR(50) NOT NULL,
     ReservationRequired BIT NOT NULL DEFAULT 0,
 
     CONSTRAINT Amentity_PK PRIMARY KEY (AmenityID)

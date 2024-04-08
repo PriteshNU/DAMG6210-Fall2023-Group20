@@ -350,9 +350,9 @@ BEGIN
 END;
 GO
 
-DECLARE @OutputMsg VARCHAR(500);
-EXEC SubmitServiceRequest 2, 'Test', 'Plumbing', '2024-08-05', 'High', NULL, @OutputMsg OUTPUT
-SELECT @OutputMsg;
+-- DECLARE @OutputMsg VARCHAR(500);
+-- EXEC SubmitServiceRequest @ResidentID=2, @Description='Test', @RequestType='Plumbing', @ScheduledDate='2024-08-05', @Priority='High', @RequestFee=NULL, @OutputMessage=@OutputMsg OUTPUT
+-- SELECT @OutputMsg;
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -438,4 +438,73 @@ BEGIN
     SET @OutputMessage = CONCAT(@OutputMessage, 'Apartment Visited: ', CAST(@ApartmentVisited AS VARCHAR(20)));
 END;
 GO
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- Procedure to book an Amenity by Resident
+CREATE PROCEDURE BookAmenity
+    @AmenityID INT,
+    @ResidentID INT,
+    @BookingDate DATE,
+    @StartTime TIME,
+    @EndTime TIME,
+    @BookingFee DECIMAL(10, 2),
+    @NumOfAttendees INT,
+    @OutputMessage VARCHAR(500) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @ReservationRequired BIT;
+    DECLARE @AvailabilityHours VARCHAR(50);
+
+    SELECT @ReservationRequired = ReservationRequired, @AvailabilityHours = AvailabilityHours
+    FROM Amenity
+    WHERE AmenityID = @AmenityID;
+
+    IF @ReservationRequired = 0
+    BEGIN
+        INSERT INTO AmenityBooking (AmenityID, ResidentID, BookingDate, StartTime, EndTime, BookingFee, NumOfAttendees)
+        VALUES (@AmenityID, @ResidentID, @BookingDate, @StartTime, @EndTime, @BookingFee, @NumOfAttendees);
+
+        SET @OutputMessage = 'Amenity booked successfully.';
+    END
+    ELSE
+    BEGIN
+        IF EXISTS (
+            SELECT 1
+            FROM Amenity
+            WHERE AmenityID = @AmenityID
+            AND CONVERT(TIME, LEFT(@AvailabilityHours, 5)) <= @StartTime
+            AND CONVERT(TIME, RIGHT(@AvailabilityHours, 5)) >= @EndTime
+        )
+        BEGIN
+            IF NOT EXISTS (
+                SELECT 1
+                FROM AmenityBooking
+                WHERE AmenityID = @AmenityID
+                AND BookingDate = @BookingDate
+                AND (
+                    (@StartTime >= StartTime AND @StartTime < EndTime)
+                    OR (@EndTime > StartTime AND @EndTime <= EndTime)
+                    OR (@StartTime <= StartTime AND @EndTime >= EndTime)
+                )
+            )
+            BEGIN
+                INSERT INTO AmenityBooking (AmenityID, ResidentID, BookingDate, StartTime, EndTime, BookingFee, NumOfAttendees)
+                VALUES (@AmenityID, @ResidentID, @BookingDate, @StartTime, @EndTime, @BookingFee, @NumOfAttendees);
+
+                SET @OutputMessage = 'Amenity booked successfully.';
+            END
+            ELSE
+            BEGIN
+                SET @OutputMessage = 'The selected time slot is not available for booking.';
+            END
+        END
+        ELSE
+        BEGIN
+            SET @OutputMessage = 'The booking time is outside the available hours for this amenity.';
+        END
+    END
+END;
 --------------------------------------------------------------------------------------------------------------------------------
