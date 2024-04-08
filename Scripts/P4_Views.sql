@@ -3,7 +3,7 @@ USE CMS;
 --------------------------------------------------------------------------------------------------------------------------------
 -- View to get summary of service requests
 GO
-CREATE VIEW vw_ServiceRequestSummary 
+CREATE OR ALTER VIEW vw_ServiceRequestSummary 
 AS
 SELECT
     sr.ServiceRequestID,
@@ -23,7 +23,7 @@ FROM
 GO
 
 GO
-CREATE VIEW vw_ServiceRequestByStatus AS
+CREATE  OR ALTER VIEW vw_ServiceRequestByStatus AS
 SELECT
     sr.Status,
     YEAR(sr.RequestDate) AS Year,
@@ -33,40 +33,38 @@ FROM
     ServiceRequest sr
 GROUP BY
     sr.Status, YEAR(sr.RequestDate), MONTH(sr.RequestDate)
-HAVING
-    sr.[Status] = 'Open';
 GO
 
 GO
-CREATE VIEW vw_ServiceRequestByType
+CREATE  OR ALTER VIEW vw_ServiceRequestByType
 AS
 SELECT
     sr.RequestType,
     COUNT(*) AS RequestCount
 FROM
     ServiceRequest sr
+WHERE
+    sr.[Status] = 'Open'
 GROUP BY
     sr.RequestType
-HAVING
-    sr.[Status] = 'Open';
 GO
 
 GO
-CREATE VIEW vw_ServiceRequestByPriority
+CREATE  OR ALTER VIEW vw_ServiceRequestByPriority
 AS
 SELECT
     sr.Priority,
     COUNT(*) AS NumberOfRequests
 FROM
     ServiceRequest sr
+WHERE
+    sr.[Status] = 'Open'
 GROUP BY
     sr.Priority
-HAVING
-    sr.[Status] = 'Open';
 GO
 
 GO
-CREATE VIEW vw_StaffByMostServiceRequestAssigned
+CREATE  OR ALTER VIEW vw_StaffByMostServiceRequestAssigned
 AS
 SELECT TOP 5
         s.StaffID,
@@ -76,19 +74,19 @@ SELECT TOP 5
         Staff s
     JOIN
         ServiceRequest sr ON s.StaffID = sr.StaffAssignedID
+    WHERE
+        sr.[Status] = 'Open'
     GROUP BY
         s.StaffID,
         s.FirstName,
         s.LastName
-    HAVING
-        sr.[Status] = 'Open'
     ORDER BY
         COUNT(sr.ServiceRequestID) DESC;
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------
 GO
-CREATE VIEW AmenityBookingsDetails
+CREATE  OR ALTER VIEW vw_AmenityBookingsDetails
 AS
 SELECT
     ab.AmenityBookingID,
@@ -117,7 +115,7 @@ GO
 
 --------------------------------------------------------------------------------------------------------------------------------
 GO
-CREATE VIEW OccupiedParkingDetails
+CREATE  OR ALTER VIEW vw_OccupiedParkingDetails
 AS
 SELECT
     ps.ParkingSlotID,
@@ -143,7 +141,7 @@ WHERE
 GO
 
 GO
-CREATE VIEW ParkingSlotUtilization AS
+CREATE  OR ALTER VIEW vw_ParkingSlotUtilization AS
 SELECT
     [Type],
     [Status],
@@ -157,7 +155,7 @@ GROUP BY
 GO
 
 GO
-CREATE VIEW VisitorParkingTrends AS
+CREATE  OR ALTER VIEW vw_VisitorParkingTrends AS
 SELECT
     VisitorID,
     COUNT(*) AS NumberOfVisits,
@@ -170,7 +168,7 @@ GROUP BY
 GO
 
 GO
-CREATE VIEW VehicleParkingSlotMapping AS
+CREATE  OR ALTER VIEW vw_VehicleParkingSlotMapping AS
 SELECT
     v.LicensePlate,
     v.Make,
