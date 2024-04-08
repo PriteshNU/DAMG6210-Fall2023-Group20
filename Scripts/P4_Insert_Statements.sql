@@ -297,16 +297,16 @@ VALUES
 -- Insert statements for the Vehicle table
 INSERT INTO Vehicle (OwnerID, LicensePlate, Make, Model, [Type])
 VALUES
-(1, 'ABC123', 'Toyota', 'Camry', 'Sedan'),
-(2, 'XYZ456', 'Honda', 'Accord', 'Sedan'),
-(3, '123ABC', 'Ford', 'F-150', 'Truck'),
-(4, '456XYZ', 'Chevrolet', 'Malibu', 'Sedan'),
-(5, 'DEF789', 'Toyota', 'RAV4', 'SUV'),
-(6, 'GHI012', 'Nissan', 'Altima', 'Sedan'),
-(7, '789DEF', 'BMW', 'X5', 'SUV'),
-(8, 'JKL345', 'Tesla', 'Model S', 'Sedan'),
-(9, 'MNO678', 'Jeep', 'Wrangler', 'SUV'),
-(10, 'PQR901', 'Hyundai', 'Tucson', 'SUV');
+(1, 'ABC123', 'Toyota', 'Corolla', 'Sedan'),
+(2, 'XYZ456', 'Honda', 'Civic', 'Sedan'),
+(3, 'DEF789', 'Ford', 'F-150', 'Truck'),
+(4, 'GHI012', 'Chevrolet', 'Malibu', 'Sedan'),
+(5, 'JKL345', 'Nissan', 'Altima', 'Sedan'),
+(6, 'MNO678', 'BMW', 'X5', 'SUV'),
+(7, 'PQR901', 'Mercedes', 'E-Class', 'Sedan'),
+(8, 'STU234', 'Audi', 'A4', 'Sedan'),
+(9, 'VWX567', 'Toyota', 'Camry', 'Sedan'),
+(10, 'YZA890', 'Ford', 'Mustang', 'Coupe');
 
 -- Insert statements for the ParkingSlot table
 INSERT INTO ParkingSlot (VehicleID, [Type], [Status])
