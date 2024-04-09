@@ -496,4 +496,55 @@ BEGIN
         END
     END
 END;
+GO
+
+-- Procedure to book an random amenity bookings for today
+CREATE OR ALTER PROCEDURE BookRandomAmenityToday
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @ab INT = 1;
+    DECLARE @AmenityID INT;
+    DECLARE @BookingDate DATE;
+    DECLARE @StartTime TIME;
+    DECLARE @EndTime TIME;
+    DECLARE @BookingFee DECIMAL(10, 2);
+    DECLARE @NumOfAttendees INT;
+    DECLARE @abOutputMsg VARCHAR(500);
+
+    WHILE @ab <= 20
+    BEGIN
+        SELECT TOP 1 @AmenityID = AmenityID
+        FROM Amenity
+        ORDER BY NEWID();
+
+        -- SET @BookingDate = DATEADD(DAY, ABS(CHECKSUM(NEWID())) % 365, GETDATE());
+        SET @BookingDate = GETDATE();
+
+        SELECT @StartTime = DATEADD(MINUTE, ABS(CHECKSUM(NEWID())) % 120, '08:00'),
+            @EndTime = DATEADD(MINUTE, ABS(CHECKSUM(NEWID())) % 120 + 60, '08:00');
+
+        IF @ab <= 10
+            SET @BookingFee = ROUND(RAND() * 100, 2);
+        ELSE
+            SET @BookingFee = NULL;
+
+        SET @NumOfAttendees = ABS(CHECKSUM(NEWID())) % 5 + 1;
+
+        -- Execute the procedure
+        EXEC dbo.BookAmenity 
+            @AmenityID = @AmenityID,
+            @ResidentID = @ab, 
+            @BookingDate = @BookingDate, 
+            @StartTime = @StartTime, 
+            @EndTime = @EndTime, 
+            @BookingFee = @BookingFee, 
+            @NumOfAttendees = @NumOfAttendees, 
+            @OutputMessage = @abOutputMsg OUTPUT;
+
+        PRINT @abOutputMsg;
+
+        SET @ab = @ab + 1;
+    END
+END;
 --------------------------------------------------------------------------------------------------------------------------------
