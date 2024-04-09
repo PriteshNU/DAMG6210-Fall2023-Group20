@@ -609,6 +609,7 @@ VALUES
 --------------------------------------------------------------------------------------------------------------------------------
 -- Insert Statements for vehicles
 SET IDENTITY_INSERT [dbo].[Vehicle] ON 
+
 INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (1, 1, N'ABC123', N'Toyota', N'Camry', N'Sedan')
 INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (2, 2, N'XYZ456', N'Honda', N'Accord', N'SUV')
 INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (3, 3, N'DEF789', N'Ford', N'Fusion', N'Sedan')
@@ -642,6 +643,17 @@ INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model],
 INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (31, 9, N'CA895478', N'Audi', N'R8', N'Coupe')
 INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (32, 10, N'TX456785', N'Ford', N'F5', N'Truck')
 INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (33, 13, N'WA89454212', N'Chevy', N'Camaro', N'Sport')
+INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (34, 14, N'TN456785', N'Ford', N'F5', N'Truck')
+INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (35, 15, N'NY789ABC', N'Toyota', N'Camry', N'Sedan')
+INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (36, 16, N'TX456DEF', N'Honda', N'Accord', N'Sedan')
+INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (37, 17, N'CA123XYZ', N'Chevrolet', N'Silverado', N'Truck')
+INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (38, 18, N'FL789XYZ', N'Ford', N'Fusion', N'Sedan')
+INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (39, 19, N'WA987MNO', N'Toyota', N'Rav4', N'SUV')
+INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (40, 20, N'CA987PQR', N'Nissan', N'Altima', N'Sedan')
+INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (41, 21, N'NY654JKL', N'Honda', N'Civic', N'Sedan')
+INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (42, 22, N'TX987GHI', N'Ford', N'Explorer', N'SUV')
+INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (43, 23, N'FL456STU', N'Toyota', N'Corolla', N'Sedan')
+INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (44, 24, N'WA789VWX', N'Chevrolet', N'Tahoe', N'SUV')
 SET IDENTITY_INSERT [dbo].[Vehicle] OFF
 GO
 --------------------------------------------------------------------------------------------------------------------------------
@@ -649,6 +661,7 @@ GO
 --------------------------------------------------------------------------------------------------------------------------------
 -- Insert statements for parking slots
 SET IDENTITY_INSERT [dbo].[ParkingSlot] ON 
+
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (1, 1, N'Reserved', N'Occupied')
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (2, NULL, N'Reserved', N'Available')
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (3, 2, N'Reserved', N'Occupied')
@@ -715,17 +728,17 @@ INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALU
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (64, 31, N'Guest', N'Occupied')
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (65, 32, N'Guest', N'Occupied')
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (66, 33, N'Guest', N'Occupied')
-INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (67, NULL, N'Guest', N'Available')
-INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (68, NULL, N'Guest', N'Available')
-INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (69, NULL, N'Guest', N'Available')
-INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (70, NULL, N'Guest', N'Available')
-INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (71, NULL, N'Guest', N'Available')
-INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (72, NULL, N'Guest', N'Available')
-INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (73, NULL, N'Guest', N'Available')
-INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (74, NULL, N'Guest', N'Available')
-INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (75, NULL, N'Guest', N'Available')
-INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (76, NULL, N'Guest', N'Available')
-INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (77, NULL, N'Guest', N'Available')
+INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (67, 34, N'Guest', N'Occupied')
+INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (68, 35, N'Guest', N'Occupied')
+INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (69, 36, N'Guest', N'Occupied')
+INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (70, 37, N'Guest', N'Occupied')
+INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (71, 38, N'Guest', N'Occupied')
+INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (72, 39, N'Guest', N'Occupied')
+INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (73, 40, N'Guest', N'Occupied')
+INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (74, 41, N'Guest', N'Occupied')
+INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (75, 42, N'Guest', N'Occupied')
+INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (76, 43, N'Guest', N'Occupied')
+INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (77, 44, N'Guest', N'Occupied')
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (78, NULL, N'Guest', N'Available')
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (79, NULL, N'Guest', N'Available')
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (80, NULL, N'Guest', N'Available')
@@ -808,6 +821,7 @@ INSERT [dbo].[ReservedParking] ([ParkingSlotID], [ApartmentID]) VALUES (60, 159)
 --------------------------------------------------------------------------------------------------------------------------------
 -- Insert statements for Visitors
 SET IDENTITY_INSERT [dbo].[Visitor] ON 
+
 INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (1, N'Yash', N'L', N'977644321', CAST(N'2024-04-07' AS Date), CAST(N'2024-04-08T12:18:05.460' AS DateTime), CAST(N'2024-04-08T12:55:07.460' AS DateTime))
 INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (2, N'Mike', N'Ross', N'877644321', CAST(N'2024-04-08' AS Date), CAST(N'2024-04-08T12:20:10.120' AS DateTime), CAST(N'2024-04-08T13:23:16.120' AS DateTime))
 INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (3, N'Mike', N'Ross', N'877644321', CAST(N'2024-03-08' AS Date), CAST(N'2024-04-08T12:26:18.100' AS DateTime), CAST(N'2024-04-08T14:16:18.100' AS DateTime))
@@ -821,6 +835,28 @@ INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [
 INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (11, N'Kamal', N'K', N'8947644321', CAST(N'2023-12-08' AS Date), CAST(N'2024-04-09T00:59:52.297' AS DateTime), CAST(N'2024-04-09T01:30:52.297' AS DateTime))
 INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (12, N'Shawn', N'Stuart', N'8947644321', CAST(N'2023-12-11' AS Date), CAST(N'2024-04-09T01:02:35.667' AS DateTime), CAST(N'2024-04-09T01:45:35.667' AS DateTime))
 INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (13, N'Vikash', N'Singh', N'8947644321', CAST(N'2024-05-14' AS Date), CAST(N'2024-04-09T01:03:40.337' AS DateTime), CAST(N'2024-04-09T01:45:40.337' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (14, N'Andrew', N'McGill', N'9949644321', CAST(N'2024-05-15' AS Date), CAST(N'2024-04-09T16:00:52.913' AS DateTime), CAST(N'2024-04-09T16:50:52.913' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (15, N'Michael', N'Johnson', N'9876543210', CAST(N'2024-06-20' AS Date), CAST(N'2024-04-09T16:14:41.723' AS DateTime), CAST(N'2024-04-09T18:14:41.723' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (16, N'Emily', N'Davis', N'1234567890', CAST(N'2024-07-10' AS Date), CAST(N'2024-04-09T16:15:24.310' AS DateTime), CAST(N'2024-04-09T17:30:24.310' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (17, N'Sophia', N'Wilson', N'8765432109', CAST(N'2024-06-05' AS Date), CAST(N'2024-04-09T16:16:26.110' AS DateTime), CAST(N'2024-04-09T19:16:26.110' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (18, N'Olivia', N'Martinez', N'9988776655', CAST(N'2024-07-15' AS Date), CAST(N'2024-04-09T16:17:12.487' AS DateTime), CAST(N'2024-04-09T20:17:12.487' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (19, N'Liam', N'Garcia', N'8877665544', CAST(N'2024-10-20' AS Date), CAST(N'2024-04-09T16:17:55.200' AS DateTime), CAST(N'2024-04-09T16:59:55.200' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (20, N'Mason', N'Rodriguez', N'9988776655', CAST(N'2023-11-25' AS Date), CAST(N'2024-04-09T16:28:49.737' AS DateTime), CAST(N'2024-04-09T21:28:49.737' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (21, N'Ava', N'Hernandez', N'8877665544', CAST(N'2024-12-30' AS Date), CAST(N'2024-04-09T16:29:13.670' AS DateTime), CAST(N'2024-04-09T17:29:13.670' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (22, N'Lucas', N'Lopez', N'7766554433', CAST(N'2024-01-05' AS Date), CAST(N'2024-04-09T16:29:38.890' AS DateTime), CAST(N'2024-04-09T19:29:38.890' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (23, N'Ethan', N'Gonzalez', N'9988776655', CAST(N'2024-02-10' AS Date), CAST(N'2024-04-09T16:30:01.573' AS DateTime), CAST(N'2024-04-10T02:30:01.573' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (24, N'Alexander', N'Perez', N'8877665544', CAST(N'2024-03-15' AS Date), CAST(N'2024-04-09T16:30:31.570' AS DateTime), CAST(N'2024-04-09T16:59:31.570' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (25, N'Benjamin', N'Taylor', N'7766554433', CAST(N'2024-04-20' AS Date), CAST(N'2024-04-09T16:33:31.400' AS DateTime), CAST(N'2024-04-09T19:33:31.400' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (26, N'Isabella', N'Thomas', N'9988776655', CAST(N'2024-05-25' AS Date), CAST(N'2024-04-09T16:33:49.583' AS DateTime), CAST(N'2024-04-09T23:03:49.583' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (27, N'Charlotte', N'Clark', N'8877665544', CAST(N'2024-06-30' AS Date), CAST(N'2024-04-09T16:34:06.500' AS DateTime), CAST(N'2024-04-09T19:34:06.500' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (28, N'Mia', N'Lewis', N'7766554433', CAST(N'2024-07-05' AS Date), CAST(N'2024-04-09T16:34:26.890' AS DateTime), CAST(N'2024-04-09T20:25:26.890' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (29, N'James', N'Young', N'9988776655', CAST(N'2024-08-10' AS Date), CAST(N'2024-04-09T16:34:54.730' AS DateTime), CAST(N'2024-04-09T19:30:54.730' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (30, N'Harper', N'King', N'8877665544', CAST(N'2024-09-15' AS Date), CAST(N'2024-04-09T16:35:15.193' AS DateTime), CAST(N'2024-04-09T17:23:15.193' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (31, N'Evelyn', N'Wright', N'7766554433', CAST(N'2024-10-20' AS Date), CAST(N'2024-04-09T16:35:35.003' AS DateTime), CAST(N'2024-04-09T19:27:35.003' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (32, N'Evelyn', N'Wright', N'7766554433', CAST(N'2024-10-20' AS Date), CAST(N'2024-04-09T16:36:43.370' AS DateTime), CAST(N'2024-04-09T23:36:43.370' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (33, N'Logan', N'Lopez', N'9988776655', CAST(N'2024-11-25' AS Date), CAST(N'2024-04-09T16:36:56.407' AS DateTime), CAST(N'2024-04-09T19:36:43.370' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (34, N'Avery', N'Hill', N'8877665544', CAST(N'2024-12-30' AS Date), CAST(N'2024-04-09T16:37:09.847' AS DateTime), CAST(N'2024-04-09T20:37:43.370' AS DateTime))
+INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (35, N'Sofia', N'Green', N'7766554433', CAST(N'2024-01-05' AS Date), CAST(N'2024-04-09T16:37:28.150' AS DateTime), CAST(N'2024-04-09T22:37:28.150' AS DateTime))
 SET IDENTITY_INSERT [dbo].[Visitor] OFF
 GO
 --------------------------------------------------------------------------------------------------------------------------------
@@ -840,5 +876,26 @@ INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (10, 15,
 INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (11, 11, N'Visiting')
 INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (12, 5, N'Visiting')
 INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (13, 9, N'Visiting')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (14, 11, N'Visiting')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (15, 12, N'Delivery')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (16, 13, N'Service')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (17, 14, N'Repair')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (18, 15, N'Pickup')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (19, 16, N'Drop-off')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (20, 17, N'Maintenance')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (21, 18, N'Meeting')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (22, 19, N'Consultation')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (23, 20, N'Drop-off')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (24, 21, N'Service')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (25, 22, N'Consultation')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (26, 23, N'Pickup')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (27, 24, N'Service')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (28, 25, N'Repair')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (29, 26, N'Delivery')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (30, 27, N'Meeting')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (32, 15, N'Maintenance')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (33, 14, N'Consultation')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (34, 15, N'Pickup')
+INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (35, 15, N'Service')
 GO
 --------------------------------------------------------------------------------------------------------------------------------
