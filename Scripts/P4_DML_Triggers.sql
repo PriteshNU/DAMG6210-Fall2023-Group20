@@ -54,7 +54,7 @@ BEGIN
             WHEN @RequestType = 'Other' THEN 'GeneralMaintenance'
         END
 
-        -- Find next available staff based on the if the current staff is unavailable on the updated scheduled date
+        -- Find next available staff if the current staff is unavailable(not more than 5 sr) on the updated scheduled date
         IF NOT EXISTS (
             SELECT 1 
             FROM ServiceRequest sr 

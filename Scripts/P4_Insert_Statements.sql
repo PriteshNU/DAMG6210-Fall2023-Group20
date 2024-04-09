@@ -374,63 +374,6 @@ BEGIN
 END;
 --------------------------------------------------------------------------------------------------------------------------------
 
-
--- Insert statements for the Visitor table
-INSERT INTO Visitor (FirstName, LastName, ContactNumber, VisitDate, EntryTime, ExitTime)
-VALUES
-('Emma', 'Miller', '1234567890', '2023-01-01', '08:00:00', '09:00:00'),
-('Oliver', 'Brown', '2345678901', '2023-01-02', '09:00:00', '10:00:00'),
-('Ava', 'Wilson', '3456789012', '2023-01-03', '10:00:00', '11:00:00'),
-('James', 'Taylor', '4567890123', '2023-01-04', '11:00:00', '12:00:00'),
-('Charlotte', 'Anderson', '5678901234', '2023-01-05', '12:00:00', '13:00:00'),
-('Mia', 'Thomas', '6789012345', '2023-01-06', '13:00:00', '14:00:00'),
-('Elijah', 'Jackson', '7890123456', '2023-01-07', '14:00:00', '15:00:00'),
-('Harper', 'White', '8901234567', '2023-01-08', '15:00:00', '16:00:00'),
-('Benjamin', 'Harris', '9012345678', '2023-01-09', '16:00:00', '17:00:00'),
-('Amelia', 'Martin', '0123456789', '2023-01-10', '17:00:00', '18:00:00');
-
--- Insert statements for the VisitorLog table
-INSERT INTO VisitorLog (VisitorID, ResidentID, Purpose)
-VALUES
-(1, 1, 'Meeting'),
-(2, 2, 'Delivery'),
-(3, 3, 'Social visit'),
-(4, 4, 'Repair service'),
-(5, 5, 'Guest'),
-(6, 6, 'Family visit'),
-(7, 7, 'Vendor visit'),
-(8, 8, 'Maintenance'),
-(9, 9, 'Appointment'),
-(10, 10, 'Friend visit');
-
--- Insert statements for the Vehicle table
-INSERT INTO Vehicle (OwnerID, LicensePlate, Make, Model, [Type])
-VALUES
-(1, 'ABC123', 'Toyota', 'Corolla', 'Sedan'),
-(2, 'XYZ456', 'Honda', 'Civic', 'Sedan'),
-(3, 'DEF789', 'Ford', 'F-150', 'Truck'),
-(4, 'GHI012', 'Chevrolet', 'Malibu', 'Sedan'),
-(5, 'JKL345', 'Nissan', 'Altima', 'Sedan'),
-(6, 'MNO678', 'BMW', 'X5', 'SUV'),
-(7, 'PQR901', 'Mercedes', 'E-Class', 'Sedan'),
-(8, 'STU234', 'Audi', 'A4', 'Sedan'),
-(9, 'VWX567', 'Toyota', 'Camry', 'Sedan'),
-(10, 'YZA890', 'Ford', 'Mustang', 'Coupe');
-
--- Insert statements for the ParkingSlot table
-INSERT INTO ParkingSlot (VehicleID, [Type], [Status])
-VALUES
-(1, 'Reserved', 'Occupied'),
-(2, 'Guest', 'Available'),
-(3, 'Reserved', 'Occupied'),
-(4, 'Guest', 'Available'),
-(5, 'Reserved', 'Occupied'),
-(6, 'Guest', 'Available'),
-(7, 'Reserved', 'Occupied'),
-(8, 'Guest', 'Available'),
-(9, 'Reserved', 'Occupied'),
-(10, 'Guest', 'Available');
-
 --------------------------------------------------------------------------------------------------------------------------------
 -- Insert statements for the Amenity table
 INSERT INTO Amenity ([Name], [Location], Capacity, AvailabilityHours, ReservationRequired)
@@ -493,9 +436,10 @@ BEGIN
     SET @ab = @ab + 1;
 END;
 --------------------------------------------------------------------------------------------------------------------------------
---Parkinf Slot Insertion
-SET IDENTITY_INSERT [dbo].[ParkingSlot] ON 
 
+--------------------------------------------------------------------------------------------------------------------------------
+-- Insert statements for parking slots
+SET IDENTITY_INSERT [dbo].[ParkingSlot] ON 
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (1, 1, N'Reserved', N'Occupied')
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (2, NULL, N'Reserved', N'Available')
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (3, 2, N'Reserved', N'Occupied')
@@ -587,8 +531,9 @@ INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALU
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (89, NULL, N'Guest', N'Available')
 INSERT [dbo].[ParkingSlot] ([ParkingSlotID], [VehicleID], [Type], [Status]) VALUES (90, NULL, N'Guest', N'Available')
 SET IDENTITY_INSERT [dbo].[ParkingSlot] OFF
-----------------------------------------------------------------------
--- Reserved Parking
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- Insert statements for Reserved Parking
 INSERT [dbo].[ReservedParking] ([ParkingSlotID], [ApartmentID]) VALUES (1, 100)
 INSERT [dbo].[ReservedParking] ([ParkingSlotID], [ApartmentID]) VALUES (2, 101)
 INSERT [dbo].[ReservedParking] ([ParkingSlotID], [ApartmentID]) VALUES (3, 102)
@@ -649,10 +594,11 @@ INSERT [dbo].[ReservedParking] ([ParkingSlotID], [ApartmentID]) VALUES (57, 156)
 INSERT [dbo].[ReservedParking] ([ParkingSlotID], [ApartmentID]) VALUES (58, 157)
 INSERT [dbo].[ReservedParking] ([ParkingSlotID], [ApartmentID]) VALUES (59, 158)
 INSERT [dbo].[ReservedParking] ([ParkingSlotID], [ApartmentID]) VALUES (60, 159)
-----------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
 
+--------------------------------------------------------------------------------------------------------------------------------
+-- Insert Statements for vehicles
 SET IDENTITY_INSERT [dbo].[Vehicle] ON 
-
 INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (1, 1, N'ABC123', N'Toyota', N'Camry', N'Sedan')
 INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (2, 2, N'XYZ456', N'Honda', N'Accord', N'SUV')
 INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (3, 3, N'DEF789', N'Ford', N'Fusion', N'Sedan')
@@ -688,8 +634,11 @@ INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model],
 INSERT [dbo].[Vehicle] ([VehicleID], [OwnerID], [LicensePlate], [Make], [Model], [Type]) VALUES (33, 13, N'WA89454212', N'Chevy', N'Camaro', N'Sport')
 SET IDENTITY_INSERT [dbo].[Vehicle] OFF
 GO
-SET IDENTITY_INSERT [dbo].[Visitor] ON 
+--------------------------------------------------------------------------------------------------------------------------------
 
+--------------------------------------------------------------------------------------------------------------------------------
+-- Insert statements for Visitors
+SET IDENTITY_INSERT [dbo].[Visitor] ON 
 INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (1, N'Yash', N'L', N'977644321', CAST(N'2024-04-07' AS Date), CAST(N'2024-04-08T12:18:05.460' AS DateTime), CAST(N'2024-04-08T12:55:07.460' AS DateTime))
 INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (2, N'Mike', N'Ross', N'877644321', CAST(N'2024-04-08' AS Date), CAST(N'2024-04-08T12:20:10.120' AS DateTime), CAST(N'2024-04-08T13:23:16.120' AS DateTime))
 INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (3, N'Mike', N'Ross', N'877644321', CAST(N'2024-03-08' AS Date), CAST(N'2024-04-08T12:26:18.100' AS DateTime), CAST(N'2024-04-08T14:16:18.100' AS DateTime))
@@ -705,6 +654,10 @@ INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [
 INSERT [dbo].[Visitor] ([VisitorID], [FirstName], [LastName], [ContactNumber], [VisitDate], [EntryTime], [ExitTime]) VALUES (13, N'Vikash', N'Singh', N'8947644321', CAST(N'2024-05-14' AS Date), CAST(N'2024-04-09T01:03:40.337' AS DateTime), CAST(N'2024-04-09T01:45:40.337' AS DateTime))
 SET IDENTITY_INSERT [dbo].[Visitor] OFF
 GO
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- Insert statements for Visitor Log
 INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (1, 2, N'Visiting')
 INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (2, 2, N'Visiting')
 INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (3, 2, N'Visiting')
@@ -719,3 +672,4 @@ INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (11, 11,
 INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (12, 5, N'Visiting')
 INSERT [dbo].[VisitorLog] ([VisitorID], [ResidentID], [Purpose]) VALUES (13, 9, N'Visiting')
 GO
+--------------------------------------------------------------------------------------------------------------------------------

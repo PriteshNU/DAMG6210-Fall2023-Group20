@@ -4,6 +4,7 @@ USE CMS;
 -- Non-Clustered Index to improve the performance of range queries and sorting
 CREATE NONCLUSTERED INDEX IDX_Visitor_VisitDate ON Visitor (VisitDate);
 CREATE NONCLUSTERED INDEX IDX_Invoice_IssueDate ON Invoice (IssueDate);
+CREATE NONCLUSTERED INDEX IDX_Payment_PaymentDate ON Payment (PaymentDate);
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------

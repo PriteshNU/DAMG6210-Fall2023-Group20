@@ -12,7 +12,7 @@ CREATE TABLE Building (
     ConstructionYear INT NOT NULL,
 
     CONSTRAINT Building_PK PRIMARY KEY (BuildingID),
-    CONSTRAINT Building_Number_Location_UQ UNIQUE ([Name], [Number])
+    CONSTRAINT Building_Name_Number_UQ UNIQUE ([Name], [Number])
 );
 
 --------------------------------------------------------------------------------------------------------------------------------
