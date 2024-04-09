@@ -431,7 +431,7 @@ GO
 
 --------------------------------------------------------------------------------------------------------------------------------
 -- Procedure to book an Amenity by Resident
-CREATE PROCEDURE BookAmenity
+CREATE OR ALTER PROCEDURE BookAmenity
     @AmenityID INT,
     @ResidentID INT,
     @BookingDate DATE,

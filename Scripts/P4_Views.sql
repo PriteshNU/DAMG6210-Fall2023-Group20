@@ -20,7 +20,7 @@ FROM
     ServiceRequest sr
     LEFT JOIN Resident r ON sr.ResidentID = r.ResidentID
     LEFT JOIN Staff s ON sr.StaffAssignedID = s.StaffID;
-GO
+
 
 GO
 CREATE  OR ALTER VIEW vw_ServiceRequestByStatus AS
@@ -33,7 +33,7 @@ FROM
     ServiceRequest sr
 GROUP BY
     sr.Status, YEAR(sr.RequestDate), MONTH(sr.RequestDate)
-GO
+
 
 GO
 CREATE  OR ALTER VIEW vw_ServiceRequestByType
@@ -47,7 +47,7 @@ WHERE
     sr.[Status] = 'Open'
 GROUP BY
     sr.RequestType
-GO
+
 
 GO
 CREATE  OR ALTER VIEW vw_ServiceRequestByPriority
@@ -61,7 +61,7 @@ WHERE
     sr.[Status] = 'Open'
 GROUP BY
     sr.Priority
-GO
+
 
 GO
 CREATE  OR ALTER VIEW vw_StaffByMostServiceRequestAssigned
@@ -110,7 +110,7 @@ JOIN
     Resident r ON ab.ResidentID = r.ResidentID
 WHERE
     ab.BookingDate >= CAST(GETDATE() AS DATE);
-GO
+
 
 GO
 CREATE OR ALTER VIEW vw_TodayAmenityBookings AS
@@ -128,9 +128,10 @@ FROM AmenityBooking AB
 JOIN Amenity A ON AB.AmenityID = A.AmenityID
 JOIN Resident R ON AB.ResidentID = R.ResidentID
 WHERE CONVERT(DATE, AB.BookingDate) = CONVERT(DATE, GETDATE());
-GO
+
 
 --------------------------------------------------------------------------------------------------------------------------------
+-- views to generate reports on visitors
 CREATE OR ALTER VIEW vw_MonthlyVisitorCount AS
 SELECT
     r.ResidentID,
@@ -164,14 +165,13 @@ GROUP BY
     YEAR(v.VisitDate),
     MONTH(v.VisitDate);
 
-GO
 --------------------------------------------------------------------------------------------------------------------------------
 
 
 --------------------------------------------------------------------------------------------------------------------------------
--- views to generate reports on parking
+-- views to generate reports on vehicle parking
 GO
-CREATE  OR ALTER VIEW vw_OccupiedParkingDetails
+CREATE OR ALTER VIEW vw_OccupiedParkingDetails
 AS
 SELECT
     ps.ParkingSlotID,
@@ -194,7 +194,7 @@ LEFT JOIN
     Vehicle vehicle ON ps.VehicleID = vehicle.VehicleID
 WHERE
     ps.Status = 'Occupied';
-GO
+
 
 GO
 CREATE  OR ALTER VIEW vw_ParkingSlotUtilization AS
@@ -207,9 +207,9 @@ FROM
     ParkingSlot
 GROUP BY
     [Type];
-GO
 
-CREATE VIEW OccupiedGuestParking 
+GO
+CREATE OR ALTER VIEW OccupiedGuestParking 
 AS
 SELECT 
     ps.ParkingSlotID,
@@ -231,13 +231,13 @@ WHERE
     ps.[Type] = 'Guest' AND 
     ps.[Status] = 'Occupied' AND
     vis.ExitTime IS NOT NULL;
-GO
+
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------
 -- views to generate reports on residents and apartments
 GO
-CREATE VIEW vw_ApartmentResidentSummary 
+CREATE OR ALTER VIEW vw_ApartmentResidentSummary 
 AS
 SELECT 
     b.BuildingID,

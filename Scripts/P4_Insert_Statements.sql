@@ -89,73 +89,65 @@ DECRYPTION BY CERTIFICATE SSNEncryptionCert;
 
 INSERT INTO Resident (ApartmentID, FirstName, LastName, ContactNumber, Email, EmergencyContact, OccupancyType, SSN)
 VALUES
-(100, 'John', 'Doe', '1234567890', 'john.doe100@email.com', '0987654321', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '123-45-6789')),
-(102, 'Jane', 'Smith', '1234567891', 'jane.smith102@email.com', '0987654322', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-7890')),
-(104, 'Alice', 'Brown', '1234567892', 'alice.brown104@email.com', '0987654323', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8901')),
-(105, 'Bob', 'Johnson', '1234567893', 'bob.johnson105@email.com', '0987654324', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-9012')),
-(107, 'Carol', 'Williams', '1234567894', 'carol.williams107@email.com', '0987654325', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '567-89-0123')),
-(108, 'David', 'Jones', '1234567895', 'david.jones108@email.com', '0987654326', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '678-90-1234')),
-(111, 'Eve', 'Miller', '1234567896', 'eve.miller111@email.com', '0987654327', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '789-01-2345')),
-(112, 'Frank', 'Wilson', '1234567897', 'frank.wilson112@email.com', '0987654328', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '890-12-3456')),
-(114, 'Grace', 'Moore', '1234567898', 'grace.moore114@email.com', '0987654329', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '901-23-4567')),
-(115, 'Henry', 'Taylor', '1234567899', 'henry.taylor115@email.com', '0987654330', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-5678')),
-(117, 'Isla', 'Anderson', '1234567800', 'isla.anderson117@email.com', '0987654331', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '123-45-6789')),
-(118, 'Jack', 'Thomas', '1234567801', 'jack.thomas118@email.com', '0987654332', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-7891')),
-(120, 'Kim', 'Lee', '1234567802', 'kim.lee120@email.com', '0987654333', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8902')),
-(122, 'Liam', 'Scott', '1234567803', 'liam.scott122@email.com', '0987654334', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-8903')),
-(123, 'Mia', 'Young', '1234567804', 'mia.young123@email.com', '0987654335', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '567-89-8904')),
-(126, 'Noah', 'Edwards', '1234567805', 'noah.edwards126@email.com', '0987654336', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '678-90-8905')),
-(128, 'Olivia', 'Harris', '1234567806', 'olivia.harris128@email.com', '0987654337', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '789-01-8906')),
-(129, 'Ethan', 'Martinez', '1234567807', 'ethan.martinez129@email.com', '0987654338', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '890-12-8907')),
-(130, 'Sophia', 'Clark', '1234567808', 'sophia.clark130@email.com', '0987654339', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '901-23-8908')),
-(132, 'James', 'Rodriguez', '1234567809', 'james.rodriguez132@email.com', '0987654340', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-8909')),
-(133, 'Isabella', 'Lewis', '1234567810', 'isabella.lewis133@email.com', '0987654341', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '123-45-8910')),
-(136, 'Alexander', 'Nguyen', '1234567811', 'alexander.nguyen136@email.com', '0987654342', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-8911')),
-(138, 'Charlotte', 'Hill', '1234567812', 'charlotte.hill138@email.com', '0987654343', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8912')),
-(139, 'Daniel', 'Evans', '1234567813', 'daniel.evans139@email.com', '0987654344', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-8913')),
-(140, 'Emma', 'Wilson', '1234567814', 'emma.wilson140@email.com', '0987654345', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '567-89-8914')),
-(142, 'Fiona', 'Garcia', '1234567815', 'fiona.garcia142@email.com', '0987654346', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '678-90-8915')),
-(124, 'George', 'Martinez', '1234567816', 'george.martinez144@email.com', '0987654347', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '789-01-8916')),
-(120, 'John', 'Doe', '1234567890', 'john.doe100@email.com', '0987654321', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '123-45-6789')),
-(120, 'Jane', 'Smith', '1234567891', 'jane.smith101@email.com', '0987654322', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-7890')),
-(120, 'Alice', 'Brown', '1234567892', 'alice.brown102@email.com', '0987654323', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8901')),
-(120, 'Bob', 'Johnson', '1234567893', 'bob.johnson103@email.com', '0987654324', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-9012')),
-(134, 'Carol', 'Williams', '1234567894', 'carol.williams104@email.com', '0987654325', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '567-89-0123')),
-(134, 'David', 'Jones', '1234567895', 'david.jones105@email.com', '0987654326', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '678-90-1234')),
-(134, 'Eve', 'Miller', '1234567896', 'eve.miller106@email.com', '0987654327', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '789-01-2345')),
-(137, 'Frank', 'Wilson', '1234567897', 'frank.wilson107@email.com', '0987654328', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '890-12-3456')),
-(137, 'Grace', 'Moore', '1234567898', 'grace.moore108@email.com', '0987654329', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '901-23-4567')),
-(139, 'Henry', 'Taylor', '1234567899', 'henry.taylor109@email.com', '0987654330', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-5678')),
-(139, 'John', 'Doe', '1234567890', 'john.doe100@email.com', '0987654321', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '123-45-6789')),
-(132, 'Jane', 'Smith', '1234567891', 'jane.smith101@email.com', '0987654322', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-7890')),
-(132, 'Alice', 'Brown', '1234567892', 'alice.brown102@email.com', '0987654323', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8901')),
-(133, 'Bob', 'Johnson', '1234567893', 'bob.johnson103@email.com', '0987654324', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-9012')),
-(134, 'Carol', 'Williams', '1234567894', 'carol.williams104@email.com', '0987654325', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '567-89-0123')),
-(135, 'David', 'Jones', '1234567895', 'david.jones105@email.com', '0987654326', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '678-90-1234')),
-(136, 'Eve', 'Miller', '1234567896', 'eve.miller106@email.com', '0987654327', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '789-01-2345')),
-(117, 'Frank', 'Wilson', '1234567897', 'frank.wilson107@email.com', '0987654328', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '890-12-3456')),
-(108, 'Grace', 'Moore', '1234567898', 'grace.moore108@email.com', '0987654329', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '901-23-4567')),
-(109, 'Henry', 'Taylor', '1234567899', 'henry.taylor109@email.com', '0987654330', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-5678')),
-(100, 'John', 'Doe', '1234567890', 'john.doe100@email.com', '0987654321', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '123-45-6789')),
-(101, 'Jane', 'Smith', '1234567891', 'jane.smith101@email.com', '0987654322', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-7890')),
-(112, 'Alice', 'Brown', '1234567892', 'alice.brown102@email.com', '0987654323', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8901')),
-(103, 'Bob', 'Johnson', '1234567893', 'bob.johnson103@email.com', '0987654324', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-9012')),
-(104, 'Carol', 'Williams', '1234567894', 'carol.williams104@email.com', '0987654325', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '567-89-0123')),
-(105, 'David', 'Jones', '1234567895', 'david.jones105@email.com', '0987654326', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '678-90-1234')),
-(106, 'Eve', 'Miller', '1234567896', 'eve.miller106@email.com', '0987654327', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '789-01-2345')),
-(107, 'Frank', 'Wilson', '1234567897', 'frank.wilson107@email.com', '0987654328', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '890-12-3456')),
-(118, 'Grace', 'Moore', '1234567898', 'grace.moore108@email.com', '0987654329', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '901-23-4567')),
-(119, 'Henry', 'Taylor', '1234567899', 'henry.taylor109@email.com', '0987654330', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-5678')),
-(110, 'John', 'Doe', '1234567890', 'john.doe100@email.com', '0987654321', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '123-45-6789')),
-(111, 'Jane', 'Smith', '1234567891', 'jane.smith101@email.com', '0987654322', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-7890')),
-(112, 'Alice', 'Brown', '1234567892', 'alice.brown102@email.com', '0987654323', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8901')),
-(113, 'Bob', 'Johnson', '1234567893', 'bob.johnson103@email.com', '0987654324', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-9012')),
-(114, 'Carol', 'Williams', '1234567894', 'carol.williams104@email.com', '0987654325', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '567-89-0123')),
-(115, 'David', 'Jones', '1234567895', 'david.jones105@email.com', '0987654326', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '678-90-1234')),
-(116, 'Eve', 'Miller', '1234567896', 'eve.miller106@email.com', '0987654327', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '789-01-2345')),
-(117, 'Frank', 'Wilson', '1234567897', 'frank.wilson107@email.com', '0987654328', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '890-12-3456')),
-(118, 'Grace', 'Moore', '1234567898', 'grace.moore108@email.com', '0987654329', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '901-23-4567')),
-(119, 'Henry', 'Taylor', '1234567899', 'henry.taylor109@email.com', '0987654330', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-5678'));
+-- owner data
+(101, 'John', 'Doe', '1234567890', 'john.doe100@email.com', '0987654321', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '123-45-6789')),
+(101, 'Bob', 'Johnson', '1234567893', 'bob.johnson105@email.com', '0987654324', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-9012')),
+(108, 'Jane', 'Smith', '1234567891', 'jane.smith102@email.com', '0987654322', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-7890')),
+(108, 'Carol', 'Williams', '1234567894', 'carol.williams107@email.com', '0987654325', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '567-89-0123')),
+(108, 'David', 'Jones', '1234567895', 'david.jones108@email.com', '0987654326', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '678-90-1234')),
+(112, 'Alice', 'Brown', '1234567892', 'alice.brown104@email.com', '0987654323', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8901')),
+(113, 'Bob', 'Johnson', '1234567893', 'bob.johnson105@email.com', '0987654324', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-9012')),
+(118, 'Carol', 'Williams', '1234567894', 'carol.williams107@email.com', '0987654325', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '567-89-0123')),
+(119, 'David', 'Jones', '1234567895', 'david.jones108@email.com', '0987654326', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '678-90-1234')),
+(123, 'Eve', 'Miller', '1234567896', 'eve.miller111@email.com', '0987654327', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '789-01-2345')),
+(124, 'Frank', 'Wilson', '1234567897', 'frank.wilson112@email.com', '0987654328', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '890-12-3456')),
+(124, 'Isla', 'Anderson', '1234567800', 'isla.anderson117@email.com', '0987654331', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '123-45-6789')),
+(130, 'Grace', 'Moore', '1234567898', 'grace.moore114@email.com', '0987654329', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '901-23-4567')),
+(134, 'Henry', 'Taylor', '1234567899', 'henry.taylor115@email.com', '0987654330', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-5678')),
+(139, 'Isla', 'Anderson', '1234567800', 'isla.anderson117@email.com', '0987654331', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '123-45-6789')),
+(140, 'Jack', 'Thomas', '1234567801', 'jack.thomas118@email.com', '0987654332', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-7891')),
+(141, 'Kim', 'Lee', '1234567802', 'kim.lee120@email.com', '0987654333', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8902')),
+(141, 'Frank', 'Wilson', '1234567897', 'frank.wilson112@email.com', '0987654328', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '890-12-3456')),
+(145, 'Liam', 'Scott', '1234567803', 'liam.scott122@email.com', '0987654334', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-8903')),
+(148, 'Mia', 'Young', '1234567804', 'mia.young123@email.com', '0987654335', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '567-89-8904')),
+(149, 'Noah', 'Edwards', '1234567805', 'noah.edwards126@email.com', '0987654336', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '678-90-8905')),
+(149, 'Sophia', 'Clark', '1234567808', 'sophia.clark130@email.com', '0987654339', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '901-23-8908')),
+(149, 'James', 'Rodriguez', '1234567809', 'james.rodriguez132@email.com', '0987654340', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-8909')),
+(149, 'Sophia', 'Clark', '1234567808', 'sophia.clark130@email.com', '0987654339', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '901-23-8908')),
+(160, 'James', 'Rodriguez', '1234567809', 'james.rodriguez132@email.com', '0987654340', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-8909')),
+(155, 'Olivia', 'Harris', '1234567806', 'olivia.harris128@email.com', '0987654337', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '789-01-8906')),
+(157, 'Ethan', 'Martinez', '1234567807', 'ethan.martinez129@email.com', '0987654338', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '890-12-8907')),
+(157, 'James', 'Rodriguez', '1234567809', 'james.rodriguez132@email.com', '0987654340', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-8909')),
+(159, 'Sophia', 'Clark', '1234567808', 'sophia.clark130@email.com', '0987654339', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '901-23-8908')),
+(160, 'James', 'Rodriguez', '1234567809', 'james.rodriguez132@email.com', '0987654340', 'Owner', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-8909')),
+
+-- tenant data
+(103, 'John', 'Doe', '1234567890', 'john.doe100@email.com', '0987654321', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '123-45-6789')),
+(105, 'Jane', 'Smith', '1234567891', 'jane.smith102@email.com', '0987654322', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-7890')),
+(105, 'Jack', 'Thomas', '1234567801', 'jack.thomas118@email.com', '0987654332', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-7891')),
+(105, 'Kim', 'Lee', '1234567802', 'kim.lee120@email.com', '0987654333', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8902')),
+(106, 'Alice', 'Brown', '1234567892', 'alice.brown104@email.com', '0987654323', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8901')),
+(109, 'Bob', 'Johnson', '1234567893', 'bob.johnson105@email.com', '0987654324', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-9012')),
+(109, 'Liam', 'Scott', '1234567803', 'liam.scott122@email.com', '0987654334', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-8903')),
+(115, 'Carol', 'Williams', '1234567894', 'carol.williams107@email.com', '0987654325', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '567-89-0123')),
+(116, 'David', 'Jones', '1234567895', 'david.jones108@email.com', '0987654326', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '678-90-1234')),
+(121, 'Eve', 'Miller', '1234567896', 'eve.miller111@email.com', '0987654327', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '789-01-2345')),
+(127, 'Frank', 'Wilson', '1234567897', 'frank.wilson112@email.com', '0987654328', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '890-12-3456')),
+(127, 'Grace', 'Moore', '1234567898', 'grace.moore114@email.com', '0987654329', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '901-23-4567')),
+(127, 'Henry', 'Taylor', '1234567899', 'henry.taylor115@email.com', '0987654330', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-5678')),
+(129, 'Grace', 'Moore', '1234567898', 'grace.moore114@email.com', '0987654329', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '901-23-4567')),
+(131, 'Henry', 'Taylor', '1234567899', 'henry.taylor115@email.com', '0987654330', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-5678')),
+(133, 'Isla', 'Anderson', '1234567800', 'isla.anderson117@email.com', '0987654331', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '123-45-6789')),
+(133, 'Alice', 'Brown', '1234567892', 'alice.brown104@email.com', '0987654323', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8901')),
+(137, 'Jack', 'Thomas', '1234567801', 'jack.thomas118@email.com', '0987654332', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-7891')),
+(143, 'Kim', 'Lee', '1234567802', 'kim.lee120@email.com', '0987654333', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '345-67-8902')),
+(146, 'Liam', 'Scott', '1234567803', 'liam.scott122@email.com', '0987654334', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '456-78-8903')),
+(151, 'Mia', 'Young', '1234567804', 'mia.young123@email.com', '0987654335', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '567-89-8904')),
+(151, 'Jane', 'Smith', '1234567891', 'jane.smith102@email.com', '0987654322', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '234-56-7890')),
+(153, 'Noah', 'Edwards', '1234567805', 'noah.edwards126@email.com', '0987654336', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '678-90-8905')),
+(153, 'Olivia', 'Harris', '1234567806', 'olivia.harris128@email.com', '0987654337', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '789-01-8906')),
+(153, 'Ethan', 'Martinez', '1234567807', 'ethan.martinez129@email.com', '0987654338', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '890-12-8907')),
+(153, 'James', 'Rodriguez', '1234567809', 'james.rodriguez132@email.com', '0987654340', 'Tenant', EncryptByKey(Key_GUID('SSNEncryptionKey'), '012-34-8909'));
 
 CLOSE SYMMETRIC KEY SSNEncryptionKey;
 --------------------------------------------------------------------------------------------------------------------------------
@@ -190,32 +182,64 @@ CLOSE SYMMETRIC KEY SSNEncryptionKey;
 -- Insert statements for the Invoice table
 INSERT INTO Invoice (ApartmentID, IssueDate, TotalAmount)
 VALUES
-(100, '2024-01-01', 2000.00),
-(102, '2024-01-01', 5000.00),
-(102, '2024-02-01', 5000.00),
-(102, '2024-03-01', 5000.00),
-(104, '2024-01-01', 2000.00), 
-(105, '2024-01-01', 3000.00), 
-(105, '2024-02-01', 3000.00), 
-(107, '2024-01-01', 2000.00),
+(101, '2024-01-01', 2000.00),
+(101, '2024-02-01', 2000.00),
+(103, '2024-01-01', 5000.00),
+(103, '2024-02-01', 5000.00),
+(105, '2024-02-01', 5000.00),
+(106, '2024-03-01', 5000.00),
 (108, '2024-01-01', 2000.00),
-(111, '2024-02-01', 3000.00),
-(112, '2024-03-01', 5000.00),
-(114, '2024-01-01', 3000.00),
-(114, '2024-02-01', 3000.00),
-(114, '2024-03-01', 3000.00),
-(115, '2024-01-01', 5000.00),
-(120, '2024-01-01', 2000.00),
-(126, '2024-01-01', 5000.00),
-(126, '2024-02-01', 5000.00),
-(128, '2024-03-01', 5000.00),
-(130, '2024-01-01', 2000.00),
-(132, '2024-01-01', 5000.00),
-(136, '2024-01-01', 5000.00),
-(136, '2024-02-01', 5000.00),
-(142, '2024-01-01', 2000.00),
-(142, '2024-02-01', 2000.00),
-(142, '2024-03-01', 2000.00);
+(108, '2024-02-01', 2000.00),
+(108, '2024-03-01', 2000.00), 
+(109, '2024-01-01', 3000.00), 
+(112, '2024-02-01', 3000.00), 
+(112, '2024-03-01', 3000.00), 
+(112, '2024-04-01', 3000.00), 
+(113, '2024-01-01', 2000.00),
+(115, '2024-01-01', 2000.00),
+(115, '2024-02-01', 2000.00),
+(116, '2024-02-01', 3000.00),
+(118, '2024-03-01', 5000.00),
+(119, '2024-01-01', 3000.00),
+(121, '2024-02-01', 3000.00),
+(121, '2024-03-01', 3000.00),
+(121, '2024-04-01', 3000.00),
+(123, '2024-03-01', 3000.00),
+(123, '2024-04-01', 3000.00),
+(124, '2024-01-01', 5000.00),
+(127, '2024-01-01', 2000.00),
+(129, '2024-01-01', 5000.00),
+(129, '2024-02-01', 5000.00),
+(130, '2024-02-01', 5000.00),
+(131, '2024-03-01', 5000.00),
+(133, '2024-01-01', 2000.00),
+(133, '2024-02-01', 2000.00),
+(133, '2024-03-01', 2000.00),
+(133, '2024-04-01', 2000.00),
+(133, '2024-05-01', 2000.00),
+(133, '2024-06-01', 2000.00),
+(134, '2024-01-01', 5000.00),
+(137, '2024-01-01', 5000.00),
+(139, '2024-02-01', 5000.00),
+(140, '2024-01-01', 2000.00),
+(141, '2024-02-01', 2000.00),
+(143, '2024-03-01', 2000.00),
+(143, '2024-04-01', 2000.00),
+(143, '2024-05-01', 2000.00),
+(145, '2024-01-01', 2000.00),
+(146, '2024-01-01', 5000.00),
+(148, '2024-02-01', 5000.00),
+(148, '2024-03-01', 5000.00),
+(148, '2024-04-01', 5000.00),
+(149, '2024-03-01', 5000.00),
+(151, '2024-01-01', 2000.00), 
+(153, '2024-01-01', 3000.00), 
+(155, '2024-02-01', 3000.00), 
+(155, '2024-03-01', 3000.00), 
+(157, '2024-01-01', 2000.00),
+(157, '2024-02-01', 2000.00),
+(159, '2024-01-01', 2000.00),
+(160, '2024-02-01', 3000.00);
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -262,6 +286,51 @@ BEGIN
 
     SET @paymentCounter = @paymentCounter + 1;
 END;
+
+
+DECLARE @srPaymentOutputMsg VARCHAR(500);
+DECLARE @srPaymentCounter INT = 1;
+DECLARE @srMaxRownum INT;
+
+DECLARE @ServiceRequestDataTemp TABLE (
+    Rownum INT IDENTITY(1,1),
+    ResidentID INT,
+    ServiceRequestID INT,
+    RequestFee DECIMAL(10, 2)
+);
+
+INSERT INTO @ServiceRequestDataTemp (ResidentID, ServiceRequestID, RequestFee)
+SELECT DISTINCT TOP 30 sr.ResidentID, sr.ServiceRequestID, sr.RequestFee
+FROM ServiceRequest sr
+WHERE sr.Status = 'Open' AND sr.RequestType IN ('Plumbing', 'Electrical');
+
+SELECT @srMaxRownum = MAX(Rownum) FROM @ServiceRequestDataTemp;
+
+WHILE @srPaymentCounter <= @srMaxRownum
+BEGIN
+    DECLARE @CurrentResidentID INT;
+    DECLARE @CurrentServiceRequestID INT;
+    DECLARE @CurrentRequestFee DECIMAL(10, 2);
+
+    SELECT @CurrentResidentID = ResidentID, @CurrentServiceRequestID = ServiceRequestID, @CurrentRequestFee = RequestFee
+    FROM @ServiceRequestDataTemp
+    WHERE Rownum = @srPaymentCounter;
+
+    EXEC dbo.MakePayment @ResidentID = @CurrentResidentID, @Amount = @CurrentRequestFee, @PaymentType = 'ServiceRequest', @PaymentMethod = 'CC', @PaymentMethodLastFour = '1979', @EntityID = @CurrentServiceRequestID, @OutputMessage = @srPaymentOutputMsg OUTPUT;
+
+    PRINT @srPaymentOutputMsg;
+
+    IF @srPaymentOutputMsg = 'Payment successful for Service Request'
+    BEGIN
+        UPDATE ServiceRequest
+        SET [Status] = 'Resolved'
+        WHERE ServiceRequestID = @CurrentServiceRequestID;
+    END
+
+
+    SET @srPaymentCounter = @srPaymentCounter + 1;
+END;
+
 --------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -396,6 +465,7 @@ BEGIN
     ORDER BY NEWID();
 
     SET @BookingDate = DATEADD(DAY, ABS(CHECKSUM(NEWID())) % 365, GETDATE());
+    -- SET @BookingDate = GETDATE();
 
     SELECT @StartTime = DATEADD(MINUTE, ABS(CHECKSUM(NEWID())) % 120, '08:00'),
            @EndTime = DATEADD(MINUTE, ABS(CHECKSUM(NEWID())) % 120 + 60, '08:00');
