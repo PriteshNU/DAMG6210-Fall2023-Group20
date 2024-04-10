@@ -83,7 +83,7 @@ GO
 
 -------------------------------------------------------------------------------------------------------------------------------
 -- Trigger to unpark visitor's vehicle after visitor exits
-CREATE TRIGGER trg_AfterVisitorExit
+CREATE OR ALTER TRIGGER trg_AfterVisitorExit
 ON Visitor
 AFTER UPDATE
 AS
